@@ -148,4 +148,4 @@ private:
 
 };
 
-#endif  // SENSEI_H
+#endif  // MELOPEROSENSEI_H

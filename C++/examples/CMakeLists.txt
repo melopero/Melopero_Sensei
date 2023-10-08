@@ -23,3 +23,8 @@ target_link_libraries(SHMUP
         hardware_clocks
         pico_rand
 )
+
+
+
+ # create map/bin/hex file etc.
+    pico_add_extra_outputs(SHMUP)
