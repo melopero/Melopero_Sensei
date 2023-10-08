@@ -14,7 +14,9 @@ typedef struct i2c_config_t
 } i2c_config;
 
 void I2C_init(i2c_config *config);
-void I2C_write(uint8_t address, uint8_t const *src, size_t len, bool stop);
+void I2C_read_reg(uint8_t address, uint8_t reg, uint8_t *dst, size_t len, bool stop);
 void I2C_read(uint8_t address, uint8_t *dst, size_t len, bool stop);
+void I2C_write_reg(uint8_t address, uint8_t reg, uint8_t const *src, size_t len, bool stop);
+void I2C_write(uint8_t address, uint8_t const *src, size_t len, bool stop);
 
-#endif  // I2C_H
+#endif // I2C_H

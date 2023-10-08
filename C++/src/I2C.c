@@ -26,3 +26,19 @@ void I2C_read(uint8_t address, uint8_t *dst, size_t len, bool stop)
 {
     i2c_read_blocking(config.instance, address, dst, len, !stop);
 }
+
+void I2C_read_reg(uint8_t address, uint8_t reg, uint8_t *dst, size_t len, bool stop)
+{
+    // Set register to read
+    I2C_write(address, &reg, 1, false);
+    // Read data from register
+    I2C_read(address, dst, len, stop);
+}
+
+void I2C_write_reg(uint8_t address, uint8_t reg, uint8_t const *src, size_t len, bool stop)
+{
+    // Set register to write
+    I2C_write(address, &reg, 1, false);
+    // Write data to register
+    I2C_write(address, src, len, stop);
+}
