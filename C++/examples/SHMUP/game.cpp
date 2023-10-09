@@ -231,6 +231,8 @@ void updateMenu(float deltaTimeSec)
         enemyDefs.push_back({EnemyDef::ENEMY2, 7, 10, 100, 100.0f, 1});
         enemyDefs.push_back({EnemyDef::ENEMY3, 8, 180, 30, 100.0f, 2});
         enemyDefs.push_back({EnemyDef::BOMB, 8, 20, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 9, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 10, 20, scrollSpeed * 3, 100.0f, 0});
                     
         starshipX = {(DISPLAY_WIDTH - starshipWidth) / 2};
         starshipY = {DISPLAY_HEIGHT - starshipHeight - 1};
@@ -611,6 +613,8 @@ void updateLifeLost(float deltaTimeSec)
         enemyDefs.push_back({EnemyDef::ENEMY2, 7, 10, 100, 100.0f, 1});
         enemyDefs.push_back({EnemyDef::ENEMY3, 8, 180, 30, 100.0f, 2});
         enemyDefs.push_back({EnemyDef::BOMB, 8, 20, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 9, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 10, 20, scrollSpeed * 3, 100.0f, 0});
         
         currentTime = 0.0f;
 
