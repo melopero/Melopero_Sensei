@@ -351,14 +351,6 @@ void graphics_draw_fill_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t he
 		ST7789_push_color(red, green, blue);
 }
 
-void graphics_draw_circle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)
-{
-}
-
-void graphics_draw_fill_circle(uint16_t x, uint16_t y, uint16_t radius, uint16_t color)
-{
-}
-
 void graphics_draw_triangle(point_2D p1, point_2D p2, point_2D p3, uint8_t red, uint8_t green, uint8_t blue)
 {
 	graphics_draw_line(p1.x, p1.y, p2.x, p2.y, red, green, blue);

@@ -54,12 +54,11 @@ void input_init(void)
     io_expander_enable_pin_irq(A, ENABLE);
     io_expander_enable_pin_irq(B, ENABLE);
 
-    gpio_init(INT_PIN);
-    gpio_set_dir(INT_PIN, false);
-    gpio_set_pulls(INT_PIN, false, false);
-    gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, true, gpio_irq_callback);
-
-    io_expander_acknowledge_interrupt();  
+    // gpio_init(INT_PIN);
+    // gpio_set_dir(INT_PIN, false);
+    // gpio_set_pulls(INT_PIN, false, false);
+    // gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, true, gpio_irq_callback);
+    //io_expander_acknowledge_interrupt();  
 }
 
 ButtonState input_get_button_state(uint8_t button)
