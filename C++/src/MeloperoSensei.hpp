@@ -46,11 +46,11 @@ public:
 
     /**** game loop ****/
 
-    virtual void setup();
+    virtual void setup() {}
 
-    virtual void update();
+    virtual void update() {}
 
-    virtual void draw();
+    virtual void draw() {}
 
     void run();
 

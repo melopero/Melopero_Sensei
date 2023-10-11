@@ -12,6 +12,7 @@ add_executable(SHMUP
         ../src/PWM.c
         ../src/fifo.c
         ../src/audio.c
+        ../src/MeloperoSensei.cpp
 )
 
 # pull in common dependencies
