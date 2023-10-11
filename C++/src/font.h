@@ -25,6 +25,7 @@ const unsigned char  symbol [][9] =
 	
 };
 
+// column-major order
 const unsigned char  font[][5] =
 {
 	{ 0x00, 0x00, 0x00, 0x00, 0x00 },   // space
