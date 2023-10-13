@@ -1,4 +1,5 @@
 #include "pico/rand.h"
+#include "pico/time.h"
 #include "../../src/MeloperoSensei.hpp"
 #include "sprites.h"
 #include <string>
@@ -12,10 +13,10 @@ MeloperoSensei sensei;
 
 enum class GameState 
 {
-    MENU, PLAY, LIFE_LOST, GAME_OVER,
+    MENU, PLAY, LIFE_LOST, WIN, GAME_OVER,
 };
 
-static const float scrollSpeed = 2.0f;
+static const uint8_t scrollSpeed = 15;   // px/sec
 
 static const uint starshipWidth = 36;
 static const uint starshipHeight = 33;
@@ -32,39 +33,53 @@ static const uint enemy3Height = 35;
 static const uint bombWidth = 23;
 static const uint bombHeight = 23;
 
-int starshipX{(DISPLAY_WIDTH - starshipWidth) / 2}, starshipY{DISPLAY_HEIGHT - starshipHeight - 1};
-int starshipVx{0}, starshipVy{0};
+static const uint8_t startingLives = 3;
+static const uint8_t startingHealth = 10;
 
-uint16_t score = 0;
-int lives = 3;
-float currentTime = 0.0f;
+static const uint8_t playerProjectileVel = 160;  // px/sec
 
-struct Pos2d
+int starshipX, starshipY;
+int starshipVx, starshipVy;
+
+uint8_t score;
+uint8_t lives;
+uint8_t health;
+
+float currentTime;
+
+struct Vec2D
 {
     int x, y;
 };
 
-Pos2d stars[500];
+static constexpr uint16_t numStars{500};
+static constexpr uint16_t numBigStars{100};
+static constexpr uint16_t numDistantStars{100};
+Vec2D stars[numStars];
 
 struct Projectile
 {
-    Pos2d pos;
+    Vec2D pos;
     bool alive = true;
 };
 
-std::vector<Projectile> projectiles;
+std::vector<Projectile> playerProjectiles;
 std::vector<Projectile> enemyProjectiles;
 
 struct Particle
 {
-    Pos2d pos;
-    int vx, vy;
+    Vec2D pos;
+    Vec2D vel;
     float lifetime;
     float duration = 0.0f;
     bool alive = true;
 };
 
 std::list<Particle> particles;
+
+static const uint8_t numParticlesPerExplosion = 50;
+static const float particlesSpeedMean = 10.0f;
+static const float particlesLifeTimeMean = 50.0f;
 
 struct EnemyDef
 {
@@ -75,164 +90,195 @@ struct EnemyDef
 
     float triggerTime;
     uint8_t offset;
+    uint8_t speed;
     float health = 0.0f;
+    uint8_t fireRate = 0;
 };
 
 struct Enemy
 {
     EnemyDef def;
-    Pos2d pos;   
+    Vec2D pos;   
 
-    void update()
+    float elapsed = 0.0f;
+
+    void update(float deltaTimeSec)
     {
-        pos.y += scrollSpeed * 3.0f;
+        pos.y += def.speed * deltaTimeSec;
+
+        elapsed += deltaTimeSec;
+
+        if (def.fireRate && elapsed >= 1.0f / def.fireRate)
+        {
+            elapsed = 0.0f;
+
+            uint8_t spriteWidth, spriteHeight;
+            switch (def.sprite)
+            {
+                
+                case EnemyDef::ENEMY1:
+                    spriteWidth = enemy1Width;
+                    spriteHeight = enemy1Height;
+                    break;
+
+                case EnemyDef::ENEMY2:
+                    spriteWidth = enemy2Width;
+                    spriteHeight = enemy2Height;
+                    break;
+
+                case EnemyDef::ENEMY3:
+                    spriteWidth = enemy3Width;
+                    spriteHeight = enemy3Height;
+                    break;
+
+                case EnemyDef::BOMB:
+                    spriteWidth = bombWidth;
+                    spriteHeight = bombHeight;
+                    break;
+            }
+
+            enemyProjectiles.push_back({{pos.x + spriteWidth / 2, pos.y + spriteHeight}});
+        }
     } 
 };
 
 std::list<EnemyDef> enemyDefs;
 std::list<Enemy> enemies;
 
-void updateMenu();
+void updateMenu(float deltaTimeSec);
 void renderMenu();
 
-void updatePlay();
+void updatePlay(float deltaTimeSec);
 void renderPlay();
 
-void updateLifeLost();
+void updateLifeLost(float deltaTimeSec);
 void renderLifeLost();
 
-void updateGameOver();
+void updateWin(float deltaTimeSec);
+void renderWin();
+
+void updateGameOver(float deltaTimeSec);
 void renderGameOver();
 
 GameState gameState = GameState::MENU;
 
 int main()
 {
+    absolute_time_t previousTime = get_absolute_time();
 
     while (true)
     {
         // calculate frame time
-
+        absolute_time_t currentTime = get_absolute_time();
+        uint64_t deltaTimeUs = absolute_time_diff_us(previousTime, currentTime);
+        float deltaTimeMs = deltaTimeUs / 1000.0f;
+        float deltaTimeSec = deltaTimeMs / 1000.0f;
+        previousTime = currentTime;
 
         // update state 
         switch (gameState)
         {
             case GameState::MENU:
-                updateMenu();
+                updateMenu(deltaTimeSec);
                 renderMenu();
                 break;
 
             case GameState::PLAY:
-                updatePlay();
+                updatePlay(deltaTimeSec);
                 renderPlay();
                 break;
 
             case GameState::LIFE_LOST:
-                updateLifeLost();
+                updateLifeLost(deltaTimeSec);
                 renderLifeLost();
                 break;
 
+            case GameState::WIN:
+                updateWin(deltaTimeSec);
+                renderWin();
+                break;
+
             case GameState::GAME_OVER:
-                updateGameOver();
+                updateGameOver(deltaTimeSec);
                 renderGameOver();
         }
     }
 }
 
-float lifeLostTime = 0.0f;
-
-void updateLifeLost()
+void updateMenu(float deltaTimeSec)
 {
-    lifeLostTime += 1.0f;
-
-    if (lifeLostTime >= 50.0f)
+    // start game
+    if (sensei.getButtonState(A) == JUST_PRESSED)
     {
-        gameState = GameState::PLAY;
+        for (auto &star : stars)
+        {
+            star.x = get_rand_32() % DISPLAY_WIDTH;
+            star.y = get_rand_32() % DISPLAY_HEIGHT;
+        }
+    
+        score = 0;
+        lives = startingLives;
+        health = startingHealth;
+        currentTime = 0.0f;
 
         enemies.clear();
         enemyDefs.clear();
-        enemyDefs.push_back({EnemyDef::ENEMY1, 0, 120, 100.0f});
-        enemyDefs.push_back({EnemyDef::ENEMY2, 50, 100, 100.0f});
-        enemyDefs.push_back({EnemyDef::ENEMY3, 80, 80, 100.0f});
-        enemyDefs.push_back({EnemyDef::BOMB, 100, 140, 100.0f});
+        enemyDefs.push_back({EnemyDef::ENEMY1, 1, 120, 50, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::ENEMY2, 3, 100, 100, 100.0f, 1});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 4, 80, 80, 100.0f, 3});
+        enemyDefs.push_back({EnemyDef::BOMB, 1, 140, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY1, 6, 200, 50, 100.0f, 4});
+        enemyDefs.push_back({EnemyDef::ENEMY2, 7, 10, 100, 100.0f, 1});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 8, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 8, 20, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 9, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 10, 20, scrollSpeed * 3, 100.0f, 0});
+                    
+        starshipX = {(DISPLAY_WIDTH - starshipWidth) / 2};
+        starshipY = {DISPLAY_HEIGHT - starshipHeight - 1};
 
-        currentTime = 0.0f;
+        gameState = GameState::PLAY;
     }
 }
 
-void renderLifeLost()
+void renderMenu()
 {
     sensei.clearScreen(0x00, 0x00, 0x00);
 
-    sensei.print(100, 120, "try again", 0xFF, 0xFF, 0xFF);
+    sensei.drawSprite(menu2, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     sensei.presentScreen();
 }
 
-void updateGameOver()
+void updatePlay(float deltaTimeSec)
 {
-        if (sensei.getButtonState(A) == JUST_PRESSED)
-                    gameState = GameState::MENU;
-}
-
-void renderGameOver()
-{
-    sensei.clearScreen(0x00, 0x00, 0x00);
-
-    sensei.print(100, 110, "EARTH IS LOST!", 0xFF, 0xFF, 0xFF);
-    sensei.print(100, 120, "GAME OVER", 0xFF, 0xFF, 0xFF);
-    sensei.print(50, 130, "press \"A\" to play again", 0xFF, 0xFF, 0xFF);
-
-    sensei.presentScreen();
-}
-
-void updateMenu()
-{
-    if (sensei.getButtonState(A) == JUST_PRESSED)
-                {
-                    for (auto &star : stars)
-                    {
-                        star.x = get_rand_32() % DISPLAY_WIDTH;
-                        star.y = get_rand_32() % DISPLAY_HEIGHT;
-                    }
-
-                    currentTime = 0.0f;
-                    
-                    enemies.clear();
-                    enemyDefs.clear();
-                    enemyDefs.push_back({EnemyDef::ENEMY1, 0, 120, 100.0f});
-                    enemyDefs.push_back({EnemyDef::ENEMY2, 50, 100, 100.0f});
-                    enemyDefs.push_back({EnemyDef::ENEMY3, 80, 80, 100.0f});
-                    enemyDefs.push_back({EnemyDef::BOMB, 100, 140, 100.0f});
-                    
-                    starshipX = {(DISPLAY_WIDTH - starshipWidth) / 2};
-                    starshipY = {DISPLAY_HEIGHT - starshipHeight - 1};
-
-                    lives = 3;
-
-                    gameState = GameState::PLAY;
-                }
-}
-
-void updatePlay()
-{
+    // exit to menu
     if (sensei.getButtonState(B) == JUST_PRESSED)
-        gameState = GameState::MENU;
-
-    currentTime += 1.0f;
-
-    // update stars background
-    for (auto &star : stars)
     {
-        star.y += scrollSpeed;
+        gameState = GameState::MENU;
+        return;
+    }
 
-        if (star.y >= DISPLAY_HEIGHT)
+    currentTime += deltaTimeSec;
+
+    // update background
+    for (int i = 0; i < numStars; i++)
+    {
+        if (i < numBigStars)
+            stars[i].y += scrollSpeed * 3 * deltaTimeSec;
+        else if (i < numBigStars + numDistantStars)
+            stars[i].y += scrollSpeed * deltaTimeSec;
+        else
+            stars[i].y += scrollSpeed * 2 * deltaTimeSec;
+
+        if (stars[i].y >= DISPLAY_HEIGHT)
         {
-            star.x = get_rand_32() % DISPLAY_WIDTH;
-            star.y = 0;
+            stars[i].x = get_rand_32() % DISPLAY_WIDTH;
+            stars[i].y = 0;
         }
     }
 
+    // spawn enemies
     while (!enemyDefs.empty() && currentTime >= enemyDefs.front().triggerTime)
     {
         uint8_t spriteWidth, spriteHeight;
@@ -264,9 +310,10 @@ void updatePlay()
         enemyDefs.pop_front();
     }
 
+    // update enemies
     for (auto &enemy : enemies)
     {
-        enemy.update();
+        enemy.update(deltaTimeSec);
 
         uint8_t spriteWidth, spriteHeight;
         switch (enemyDefs.front().sprite)
@@ -299,22 +346,20 @@ void updatePlay()
                 lives--;
 
                 if (lives)
-                {
-                    lifeLostTime = 0.0f;
                     gameState = GameState::LIFE_LOST;
-                }
                 else 
                     gameState = GameState::GAME_OVER;
             }         
         }
 
+        // remove off-screen and dead enemies
         enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy &enemy){ return enemy.pos.y >= DISPLAY_HEIGHT || enemy.def.health <= 0.0f;}), enemies.end());
 
         // update particles
         for (auto &particle : particles)
         {
-            particle.pos.x += particle.vx;
-            particle.pos.y += particle.vy;
+            particle.pos.x += particle.vel.x;
+            particle.pos.y += particle.vel.y;
 
             particle.duration += 5.0f;
 
@@ -322,13 +367,13 @@ void updatePlay()
                 particle.alive = false;
         }
 
+        // remove dead particles
         particles.erase(std::remove_if(particles.begin(), particles.end(), [](const Particle &particle){ return !particle.alive;}), particles.end());
 
-
         // update player's projectiles
-        for (auto &projectile : projectiles)
+        for (auto &projectile : playerProjectiles)
         {
-            projectile.pos.y -= 5;
+            projectile.pos.y -= playerProjectileVel * deltaTimeSec;
 
             for (auto &enemy : enemies)
             {
@@ -365,11 +410,11 @@ void updatePlay()
                     sensei.playNote(440.f, 100, 1.0f, false, 100.0f);
                     score += 10;
 
-                    for (int i = 0; i < 50; i++)
+                    for (int i = 0; i < numParticlesPerExplosion; i++)
                     {   
-                        float speed = (float)rand() / RAND_MAX * 10.0f;
+                        float speed = (float)rand() / RAND_MAX * particlesSpeedMean;  
                         float angle = (float)rand() / RAND_MAX * 2.0f * 3.14f; 
-                        float lifetime = (float)get_rand_32() / UINT32_MAX * 50.0f;
+                        float lifetime = (float)get_rand_32() / UINT32_MAX * particlesLifeTimeMean;
                         particles.push_back({{enemy.pos.x + spriteWidth / 2, enemy.pos.y + spriteHeight / 2}, speed * cos(angle), speed * sin(angle), lifetime});
                     }
                 }
@@ -379,21 +424,42 @@ void updatePlay()
                 projectile.alive = false;
         }
 
-        // remove off-screen and collided bullets
-        projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const Projectile &p){ return !p.alive; }), projectiles.end()); 
+        // remove off-screen and collided projectiles
+        playerProjectiles.erase(std::remove_if(playerProjectiles.begin(), playerProjectiles.end(), [](const Projectile &p){ return !p.alive; }), playerProjectiles.end()); 
 
         // update enemies' projectiles
-        for (auto &enemyProjectile : enemyProjectiles)
+        for (auto &projectile : enemyProjectiles)
         {
-            
+            projectile.pos.y += playerProjectileVel * deltaTimeSec;
 
-            if (enemyProjectile.pos.x < 0 || enemyProjectile.pos.x >= DISPLAY_WIDTH || enemyProjectile.pos.y < 0 || enemyProjectile.pos.y >= DISPLAY_HEIGHT)
-                enemyProjectile.alive = false;
+            if (projectile.pos.x >= starshipX && projectile.pos.x <= starshipX + starshipWidth && projectile.pos.y >= starshipY && projectile.pos.y <= starshipY + starshipHeight)
+            {
+                projectile.alive = false;
+                
+                sensei.playNote(600.f, 300, 1.0f, false, 100.0f);
+                
+                health--;
+
+                if (health == 0)
+                {
+                    lives--;
+
+                    if (lives)
+                        gameState = GameState::LIFE_LOST;
+                    else 
+                        gameState = GameState::GAME_OVER;
+                }
+
+            }
+
+            if (projectile.pos.x < 0 || projectile.pos.x >= DISPLAY_WIDTH || projectile.pos.y < 0 || projectile.pos.y >= DISPLAY_HEIGHT)
+                projectile.alive = false;
         }
 
-        // remove off-screen bullets and collided bullets
+        // remove off-screen and collided projectiles
         enemyProjectiles.erase(std::remove_if(enemyProjectiles.begin(), enemyProjectiles.end(), [](const Projectile &p){ return !p.alive; }), enemyProjectiles.end());
 
+        // process player input
         starshipVx = starshipVy = 0;
 
         if (sensei.getButtonState(RIGHT) == PRESSED)
@@ -406,12 +472,11 @@ void updatePlay()
             starshipVy += 4;
         if (sensei.getButtonState(A) == JUST_PRESSED)
         {
-            projectiles.push_back({starshipX + starshipWidth / 2, starshipY + 10});
+            playerProjectiles.push_back({starshipX + starshipWidth / 2, starshipY + 10});
             sensei.playNote(440.f, 100, 1.0f, true, 100.0f);
         }
-        if (sensei.getButtonState(B) == JUST_PRESSED)
-            ;
 
+        // update player position
         starshipX += starshipVx;
         starshipY += starshipVy;
 
@@ -428,35 +493,28 @@ void updatePlay()
             starshipY = DISPLAY_HEIGHT - starshipHeight;
 }
 
-void renderMenu()
-{
-    sensei.clearScreen(0x00, 0x00, 0x00);
-
-    sensei.drawSprite(menu, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-
-    sensei.presentScreen();
-}
-
 void renderPlay()
 {
         sensei.clearScreen(0x00, 0x00, 0x00);
 
-        for (int i = 0; i < sizeof(stars) / sizeof(Pos2d); i++ )
+        // render background
+        for (int i = 0; i < numStars /*sizeof(stars) / sizeof(Vec2D)*/; i++ )
         {
-            if (i < 100)
-                sensei.drawPixel(stars[i].x, stars[i].y, 0x1F, 0x1F, 0x1F);
-            else if (i < 200)
+            if (i < numBigStars)
             {
                 sensei.drawPixel(stars[i].x, stars[i].y, 0xFF, 0xFF, 0xFF);
                 sensei.drawPixel(stars[i].x + 1, stars[i].y, 0xFF, 0xFF, 0xFF);
                 sensei.drawPixel(stars[i].x, stars[i].y + 1, 0xFF, 0xFF, 0xFF);
                 sensei.drawPixel(stars[i].x + 1, stars[i].y + 1, 0xFF, 0xFF, 0xFF);
-            }
+            }  
+            else if (i < numBigStars + numDistantStars)
+                sensei.drawPixel(stars[i].x, stars[i].y, 0x1F, 0x1F, 0x1F);
             else
                 sensei.drawPixel(stars[i].x, stars[i].y, 0xFF, 0xFF, 0xFF);
         }
 
-        for (auto &projectile : projectiles)
+        // render player projectiles
+        for (auto &projectile : playerProjectiles)
         {
             sensei.drawPixel(projectile.pos.x, projectile.pos.y, 0x00, 0xFF, 0x00);
             sensei.drawPixel(projectile.pos.x + 1, projectile.pos.y, 0x00, 0xFF, 0x00);
@@ -467,8 +525,22 @@ void renderPlay()
             sensei.drawPixel(projectile.pos.x - 1, projectile.pos.y - 1, 0x00, 0xFF, 0x00);
         }
 
+        // render enemy projectiles
+        for (auto &projectile : enemyProjectiles)
+        {
+            sensei.drawPixel(projectile.pos.x, projectile.pos.y, 0xFF, 0x00, 0x00);
+            sensei.drawPixel(projectile.pos.x + 1, projectile.pos.y, 0xFF, 0x00, 0x00);
+            sensei.drawPixel(projectile.pos.x, projectile.pos.y + 1, 0xFF, 0x00, 0x00);
+            sensei.drawPixel(projectile.pos.x + 1, projectile.pos.y + 1, 0x00, 0xFF, 0x00);
+            sensei.drawPixel(projectile.pos.x -1 , projectile.pos.y, 0xFF, 0x00, 0x00);
+            sensei.drawPixel(projectile.pos.x, projectile.pos.y - 1, 0xFF, 0x00, 0x00);
+            sensei.drawPixel(projectile.pos.x - 1, projectile.pos.y - 1, 0xFF, 0x00, 0x00);
+        }
+
+        // render player
         sensei.drawSprite(starship_idle, starshipX, starshipY, starshipWidth, starshipHeight);
 
+        // render enemies
         for (auto &enemy : enemies)
         {
             switch (enemy.def.sprite)
@@ -491,16 +563,98 @@ void renderPlay()
             }
         }
 
+        // render particles
         for (auto &particle : particles)
         {
-            sensei.drawPixel(particle.pos.x, particle.pos.y, 0xFF, 0xAA, 0x00);
-            sensei.drawPixel(particle.pos.x + 1, particle.pos.y, 0xFF, 0xAA, 0x00);
-            sensei.drawPixel(particle.pos.x, particle.pos.y + 1, 0xFF, 0xAA, 0x00);
-            sensei.drawPixel(particle.pos.x + 1, particle.pos.y + 1, 0xFF, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x, particle.pos.y, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x + 1, particle.pos.y, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x, particle.pos.y + 1, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x + 1, particle.pos.y + 1, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x - 1, particle.pos.y, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x, particle.pos.y - 1, 0xFF - particle.duration, 0xAA, 0x00);
+            sensei.drawPixel(particle.pos.x - 1, particle.pos.y - 1, 0xFF - particle.duration, 0xAA, 0x00);
         }
 
+        // render HUD
         sensei.print(10, 10, (std::string("score: ") + std::to_string(score)).c_str(), 0xFF, 0x00, 0x00);
+        sensei.print(100, 10, (std::string("health: ") + std::to_string(health)).c_str(), 0xFF, 0x00, 0x00);
         sensei.print(180, 10, (std::string("lives: ") + std::to_string(lives)).c_str(), 0xFF, 0x00, 0x00);
 
         sensei.presentScreen();
 }
+
+#define LIFE_LOST_SCREEN_TIME 50.0f
+
+void updateLifeLost(float deltaTimeSec)
+{
+    static float lifeLostTime = 0.0f;
+
+    lifeLostTime += 1.0f;
+
+    if (lifeLostTime >= LIFE_LOST_SCREEN_TIME)
+    {
+        lifeLostTime = 0.0f;
+
+        gameState = GameState::PLAY;
+
+        health = startingHealth;
+
+        playerProjectiles.clear();
+        enemyProjectiles.clear();
+        particles.clear();
+
+        enemies.clear();
+        enemyDefs.clear();
+        enemyDefs.push_back({EnemyDef::ENEMY1, 1, 120, 50, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::ENEMY2, 3, 100, 100, 100.0f, 1});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 4, 80, 80, 100.0f, 3});
+        enemyDefs.push_back({EnemyDef::BOMB, 1, 140, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY1, 6, 200, 50, 100.0f, 4});
+        enemyDefs.push_back({EnemyDef::ENEMY2, 7, 10, 100, 100.0f, 1});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 8, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 8, 20, scrollSpeed * 3, 100.0f, 0});
+        enemyDefs.push_back({EnemyDef::ENEMY3, 9, 180, 30, 100.0f, 2});
+        enemyDefs.push_back({EnemyDef::BOMB, 10, 20, scrollSpeed * 3, 100.0f, 0});
+        
+        currentTime = 0.0f;
+
+        score = 0;
+    }
+}
+
+void renderLifeLost()
+{
+    sensei.clearScreen(0x00, 0x00, 0x00);
+
+    //sensei.drawSprite(destroyed, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+    sensei.presentScreen();
+}
+
+void updateWin(float deltaTimeSec)
+{
+
+}
+
+void renderWin()
+{
+
+}
+
+void updateGameOver(float deltaTimeSec)
+{
+        if (sensei.getButtonState(A) == JUST_PRESSED)
+                    gameState = GameState::MENU;
+}
+
+void renderGameOver()
+{
+    sensei.clearScreen(0x00, 0x00, 0x00);
+
+    //sensei.drawSprite(game_over, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+    sensei.presentScreen();
+}
+
+
+

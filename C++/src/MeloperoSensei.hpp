@@ -14,103 +14,45 @@ extern "C"
 class MeloperoSensei
 {
 public:
-    MeloperoSensei()
-    {
-        SPI1Init();
-        I2C1Init();
-    
-        graphics_init();
+    MeloperoSensei();
 
-        input_init();
-
-        VSENEnable(true);
-
-        audio_init();
-    }
-
-    ~MeloperoSensei()
-    {
-        audio_deinit();
-    }
+    ~MeloperoSensei();
 
     /**** graphics interface ****/
 
-    void clearScreen(uint8_t red, uint8_t green, uint8_t blue)
-    {
-        graphics_clear_framebuffer(red, green, blue);
-    }
+    void clearScreen(uint8_t red, uint8_t green, uint8_t blue);
 
-    void presentScreen()
-    {
-        graphics_present_framebuffer();
-    }
+    void presentScreen();
 
-    void drawPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue)
-    {
-        graphics_draw_pixel_framebuffer(x, y, red, green, blue);
-    }
+    void drawPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
+    
+    void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint8_t red, uint8_t green, uint8_t blue);
 
-    void drawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue)
-    {
-        graphics_draw_rect_framebuffer(x, y, width, height, red, green, blue);
-    }
+    void drawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue);
 
-    void drawFillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue)
-    {
-        graphics_draw_fill_rect_framebuffer(x, y, width, height, red, green, blue);
-    }
+    void drawFillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue);
 
-    void drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency = 0xE037 /*0x30FF00*/)
-    {
-        graphics_draw_sprite_framebuffer(sprite, x, y, width, height, transparency);
-    }
+    void drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency = 0xE037 /*0x30FF00*/);
 
-    void print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue)
-    {
-        graphics_set_cursor_x(posX);
-        graphics_set_cursor_y(posY);
-        graphics_print_framebuffer(string, red, green, blue);
-    }
+    void print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue);
 
     /**** input interface ****/
 
-    ButtonState getButtonState(uint8_t button)
-    {
-        return input_get_button_state(button);
-    }
+    ButtonState getButtonState(uint8_t button);
 
     /**** audio interface ****/
 
-    void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time)
-    {
-        audio_play_note(frequency, duration, volume, sweep_direction, sweep_time);
-    }
+    void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
 
-    void setup();
+    /**** game loop ****/
 
-    void update();
+    virtual void setup() {}
 
-    void draw();
+    virtual void update() {}
 
-    void render()
-    {
-        graphics_clear_framebuffer(0x00, 0x00, 0x00);
+    virtual void draw() {}
 
-        draw();
-
-        graphics_present_framebuffer();
-    }
-
-    void run()
-    {
-        setup();
-
-        while (true)
-        {
-            update();
-            render();
-        }
-    }
+    void run();
 
 private:
 
@@ -146,6 +88,14 @@ private:
         gpio_put(VSEN_PIN, enable);
     }
 
+    void render()
+    {
+        graphics_clear_framebuffer(0x00, 0x00, 0x00);
+
+        draw();
+
+        graphics_present_framebuffer();
+    }
 };
 
 #endif  // MELOPEROSENSEI_H
