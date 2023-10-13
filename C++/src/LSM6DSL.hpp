@@ -1,17 +1,15 @@
 #ifndef Melopero_LSM6DSL_H_INCLUDED
 #define Melopero_LSM6DSL_H_INCLUDED
 
+extern "C"
+{
 #include "lsm6dsl-pid/lsm6dsl_reg.h"
+}
 
 class LSM6DSL
 {
 private:
     stmdev_ctx_t dev_ctx;
-    uint8_t i2c_address;
-
-    /** Please note that is MANDATORY: return 0 -> no Error.**/
-    int32_t platform_write(void *handle, uint8_t Reg, const uint8_t *Bufp, uint16_t len);
-    int32_t platform_read(void *handle, uint8_t Reg, uint8_t *Bufp, uint16_t len);
 
 public:
     int16_t data_raw_acceleration[3];
@@ -21,7 +19,7 @@ public:
     float angular_rate_mdps[3];
     float temperature_degC;
 
-    void initI2C(uint8_t address);
+    LSM6DSL();
 
     void testSetup(); // TODO: remove
 

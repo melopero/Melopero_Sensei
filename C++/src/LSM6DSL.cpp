@@ -1,22 +1,32 @@
 #include "LSM6DSL.hpp"
-#include "I2C.h"
 
-void LSM6DSL::initI2C(uint8_t address)
+extern "C"
 {
-    i2c_address = address;
-    dev_ctx.write_reg = I2C_write;
+#include "I2C.h"
+#include "string.h"
+}
+
+uint8_t LSM6DSL_I2C_ADDRESS = 0xD7U;
+
+int32_t platform_read(void *handle, uint8_t reg, uint8_t *buf, uint16_t len)
+{
+    I2C_read_reg(LSM6DSL_I2C_ADDRESS, reg, buf, len, true);
+    return 0;
+}
+
+int32_t platform_write(void *handle, uint8_t reg, const uint8_t *buf, uint16_t len)
+{
+    I2C_write_reg(LSM6DSL_I2C_ADDRESS, reg, buf, len, true);
+    return 0;
+}
+
+
+LSM6DSL::LSM6DSL()
+{
+    dev_ctx.write_reg = platform_write;
     dev_ctx.read_reg = platform_read;
 }
 
-int32_t LSM6DSL::platform_read(void *handle, uint8_t reg, uint8_t *buf, uint16_t len)
-{
-    I2C_read_reg(i2c_address, reg, buf, len, true);
-}
-
-int32_t LSM6DSL::platform_write(void *handle, uint8_t reg, const uint8_t *buf, uint16_t len)
-{
-    I2C_write_reg(i2c_address, reg, buf, len, true);
-}
 
 void LSM6DSL::testSetup()
 {
