@@ -44,3 +44,12 @@ void MPR121_write_reg(uint8_t reg, uint8_t val)
 {
     I2C_write_reg(MPR121_I2C_DEFAULT_ADDRESS, reg, &val, 1, true);
 }
+
+void MPR121_set_thresholds(uint8_t touch, uint8_t release)
+{
+    for (uint8_t i = 0; i < 12; i++)
+    {
+        MPR121_write_reg(MPR121_TOUCH_THRESHOLD_0_REGISTER + 2 * i, touch);
+        MPR121_write_reg(MPR121_RELEASE_THRESHOLD_0_REGISTER + 2 * i, release);
+    }
+}

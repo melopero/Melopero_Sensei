@@ -24,7 +24,7 @@ int main()
 
     MPR121_reset();
     MPR121_stop();
-    MPR121_auto_config();
+    MPR121_set_thresholds(MPR121_TOUCH_THRESHOLD_DEFAULT, MPR121_RELEASE_THRESHOLD_DEFAULT);
     MPR121_run();
 
     sensei.clearScreen(0, 0, 0);
