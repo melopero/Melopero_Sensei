@@ -13,24 +13,28 @@ int main()
 
     imu.testSetup();
 
-    sensei.clearScreen(0,0,0);
+    sensei.clearScreen(0, 0, 0);
     sensei.print(0, 0, "IMU Initalized", 255, 255, 255);
     sensei.presentScreen();
-
-    int counter = 0;
 
     // Loop forever
     while (true)
     {
 
-        // Blink LED
-        imu.updateAccelerationMeasurements();
+        imu.updateMeasurements();
         sensei.clearScreen(0, 0, 0);
-        //counter++;
-        char msg[128];
-        sprintf(msg, "x: %f  y: %f  z: %f", imu.acceleration_mg[0], imu.acceleration_mg[1], imu.acceleration_mg[2]);
-        sensei.print(0, 0, msg, 255, 255, 255);
-        //sensei.print(counter, counter, "test ", 255, 255, 255);
+
+        char acc_msg[128];
+        char gyro_msg[128];
+        char temp_msg[128];
+        sprintf(acc_msg, "x: %f  y: %f  z: %f", imu.acceleration_mg[0], imu.acceleration_mg[1], imu.acceleration_mg[2]);
+        sprintf(gyro_msg, "x: %f  y: %f  z: %f", imu.angular_rate_mdps[0], imu.angular_rate_mdps[1], imu.angular_rate_mdps[2]);
+        sprintf(temp_msg, "t: %f", imu.temperature_degC);
+
+        sensei.print(0, 0, acc_msg, 255, 255, 255);
+        sensei.print(0, 20, gyro_msg, 255, 255, 255);
+        sensei.print(0, 40, temp_msg, 255, 255, 255);
+
         sensei.presentScreen();
     }
 }
