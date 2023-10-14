@@ -1,6 +1,20 @@
 #include "MPR121.h"
 #include "I2C.h"
 
+void MPR121_auto_config()
+{
+    MPR121_write_reg(MPR121_AUTO_CONFIG_0_REGISTER, 0xFF);
+    MPR121_write_reg(MPR121_AUTO_CONFIG_1_REGISTER, 0);
+}
+
+void MPR121_get_touch_status(uint16_t *val)
+{
+    uint8_t status_0;
+    uint8_t status_1;
+    MPR121_read_reg(MPR121_TOUCH_STATUS_0_REGISTER, &status_0);
+    MPR121_read_reg(MPR121_TOUCH_STATUS_1_REGISTER, &status_1);
+    *val = (status_0 | (status_1 << 8)) & 0x0EFF;
+}
 
 void MPR121_reset()
 {
