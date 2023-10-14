@@ -23,9 +23,7 @@ public:
 
     void testSetup(); // TODO: remove
 
-    // void updateGyroscopeMeasurements();
-    void updateAccelerationMeasurements();
-    // void updateTemperatureMeasurements();
+    void updateMeasurements();
 };
 
 #endif // Melopero_LSM6DSL_H_INCLUDED
