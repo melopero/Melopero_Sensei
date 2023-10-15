@@ -31,8 +31,7 @@ void MPR121_reset()
     // Charge Discharge Time, CDT=1 (0.5us charge time)
     // Second Filter Iterations, SFI=0 (4x samples taken)
     // Electrode Sample Interval, ESI=4 (16ms period)
-    //if self._register8(MPR121_CONFIG2) != 0x24:
-    //    raise RuntimeError('Failed to reset MPR121 to default state')
+    // TODO: check content of CONFIG2 register and see if soft reset worked
 
     // Set touch and release trip thresholds
     MPR121_set_thresholds(MPR121_TOUCH_THRESHOLD_DEFAULT, MPR121_RELEASE_THRESHOLD_DEFAULT);
