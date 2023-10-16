@@ -19,7 +19,7 @@ typedef struct triangle
 
 enum font_name
 {
-	FREE_MONO, FREE_MONO_BOLD,
+	FREE_MONO, FREE_MONO_BOLD, FREE_SANS, FREE_SANS_BOLD,
 };
 
 enum font_size
