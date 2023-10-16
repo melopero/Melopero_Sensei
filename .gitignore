@@ -1,3 +1,7 @@
 assets/*
 .vscode/*
-build/*
+**/build/*
+
+# CMake stuff
+**/CMakeFiles/*
+**/CMakeCache.txt
