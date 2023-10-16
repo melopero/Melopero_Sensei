@@ -38,9 +38,9 @@ public:
 
     void setTextColor(uint8_t red, uint8_t green, uint8_t blue);
 
-    void drawChar(uint16_t x, uint16_t y, char c, uint8_t red, uint8_t green, uint8_t blue);
+    void drawChar(uint16_t x, uint16_t y, char c);
 
-    void print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue);
+    void print(uint8_t posX, uint8_t posY, const char *string);
 
     /**** input interface ****/
 

@@ -62,12 +62,12 @@ void MeloperoSensei::setTextColor(uint8_t red, uint8_t green, uint8_t blue)
     graphics_set_text_color(red, green, blue);
 }
 
-void MeloperoSensei::drawChar(uint16_t x, uint16_t y, char c, uint8_t red, uint8_t green, uint8_t blue)
+void MeloperoSensei::drawChar(uint16_t x, uint16_t y, char c)
 {
     graphics_draw_char(x, y, c);
 }
 
-void MeloperoSensei::print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue)
+void MeloperoSensei::print(uint8_t posX, uint8_t posY, const char *string)
 {
     graphics_set_cursor_x(posX);
     graphics_set_cursor_y(posY);
