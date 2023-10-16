@@ -235,6 +235,64 @@ void graphics_set_text_font(enum font_name name, enum font_size size)
 					break;
 			}
 			break;
+
+		case FREE_SANS:
+			switch (size)
+			{
+				case VERY_SMALL:
+					font_bitmap = FreeSans9pt7bBitmaps;
+					glyph_defs = FreeSans9pt7bGlyphs;
+					vertical_spacing = FreeSans9pt7bVerticalSpacing;
+					break;
+
+				case SMALL:
+					font_bitmap = FreeSans12pt7bBitmaps;
+					glyph_defs = FreeSans12pt7bGlyphs;
+					vertical_spacing = FreeSans12pt7bVerticalSpacing;
+					break;
+
+				case REGULAR:
+					font_bitmap = FreeSans18pt7bBitmaps;
+					glyph_defs = FreeSans18pt7bGlyphs;
+					vertical_spacing = FreeSans18pt7bVerticalSpacing;
+					break;
+
+				case BIG:
+					font_bitmap = FreeSans24pt7bBitmaps;
+					glyph_defs = FreeSans24pt7bGlyphs;
+					vertical_spacing = FreeSans24pt7bVerticalSpacing;
+					break;
+			}
+			break;
+
+		case FREE_SANS_BOLD:
+			switch (size)
+			{
+				case VERY_SMALL:
+					font_bitmap = FreeSansBold9pt7bBitmaps;
+					glyph_defs = FreeSansBold9pt7bGlyphs;
+					vertical_spacing = FreeSansBold9pt7bVerticalSpacing;
+					break;
+
+				case SMALL:
+					font_bitmap = FreeSansBold12pt7bBitmaps;
+					glyph_defs = FreeSansBold12pt7bGlyphs;
+					vertical_spacing = FreeSansBold12pt7bVerticalSpacing;
+					break;
+
+				case REGULAR:
+					font_bitmap = FreeSansBold18pt7bBitmaps;
+					glyph_defs = FreeSansBold18pt7bGlyphs;
+					vertical_spacing = FreeSansBold18pt7bVerticalSpacing;
+					break;
+
+				case BIG:
+					font_bitmap = FreeSansBold24pt7bBitmaps;
+					glyph_defs = FreeSansBold24pt7bGlyphs;
+					vertical_spacing = FreeSansBold24pt7bVerticalSpacing;
+					break;
+			}
+			break;
 	}
 }
 
@@ -263,7 +321,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 		{
 			const uint8_t *bitmap = character_bitmap + (k + j * w) / 8;
 			if (*bitmap & 1 << 7 - (k + j * w) % 8)
-				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);
+				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);   // TODO: fix char origin
 		}
 }
 
