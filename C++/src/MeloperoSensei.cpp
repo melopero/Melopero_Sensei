@@ -29,7 +29,7 @@ void MeloperoSensei::presentScreen()
 
 void MeloperoSensei::drawPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue)
 {
-    graphics_draw_pixel_framebuffer(x, y, red, green, blue);
+    graphics_draw_pixel(x, y, red, green, blue);
 }
 
 void MeloperoSensei::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint8_t red, uint8_t green, uint8_t blue)
@@ -39,24 +39,39 @@ void MeloperoSensei::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2
 
 void MeloperoSensei::drawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue)
 {
-    graphics_draw_rect_framebuffer(x, y, width, height, red, green, blue);
+    graphics_draw_rect(x, y, width, height, red, green, blue);
 }
 
 void MeloperoSensei::drawFillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue)
 {
-    graphics_draw_fill_rect_framebuffer(x, y, width, height, red, green, blue);
+    graphics_draw_fill_rect(x, y, width, height, red, green, blue);
 }
 
 void MeloperoSensei::drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency /*= 0xE037 */)
 {
-    graphics_draw_sprite_framebuffer(sprite, x, y, width, height, transparency);
+    graphics_draw_sprite(sprite, x, y, width, height, transparency);
+}
+
+void MeloperoSensei::setTextFont(enum font_name name, enum font_size size)
+{
+    graphics_set_text_font(name, size);
+}
+
+void MeloperoSensei::setTextColor(uint8_t red, uint8_t green, uint8_t blue)
+{
+    graphics_set_text_color(red, green, blue);
+}
+
+void MeloperoSensei::drawChar(uint16_t x, uint16_t y, char c, uint8_t red, uint8_t green, uint8_t blue)
+{
+    graphics_draw_char(x, y, c);
 }
 
 void MeloperoSensei::print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue)
 {
     graphics_set_cursor_x(posX);
     graphics_set_cursor_y(posY);
-    graphics_print_framebuffer(string, red, green, blue);
+    graphics_print(string);
 }
 
 /**** input interface ****/

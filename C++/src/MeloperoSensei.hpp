@@ -34,6 +34,12 @@ public:
 
     void drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency = 0xE037 /*0x30FF00*/);
 
+    void setTextFont(enum font_name name, enum font_size size);
+
+    void setTextColor(uint8_t red, uint8_t green, uint8_t blue);
+
+    void drawChar(uint16_t x, uint16_t y, char c, uint8_t red, uint8_t green, uint8_t blue);
+
     void print(uint8_t posX, uint8_t posY, const char *string, uint8_t red, uint8_t green, uint8_t blue);
 
     /**** input interface ****/
