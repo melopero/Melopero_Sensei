@@ -576,11 +576,11 @@ void renderPlay()
         }
 
         // render HUD
-        sensei.setTextFont(FREE_MONO_BOLD, VERY_SMALL);
+        sensei.setTextFont(FREE_SANS_BOLD, SMALL);
         sensei.setTextColor(0xFF, 0x00, 0x00);
-        sensei.print(10, 10, (std::string("score: ") + std::to_string(score)).c_str(), 0xFF, 0x00, 0x00);
-        sensei.print(10, 30, (std::string("health: ") + std::to_string(health)).c_str(), 0xFF, 0x00, 0x00);
-        sensei.print(10, 50, (std::string("lives: ") + std::to_string(lives)).c_str(), 0xFF, 0x00, 0x00);
+        sensei.print(10, 10, (std::string("score: ") + std::to_string(score)).c_str());
+        sensei.print(10, 30, (std::string("health: ") + std::to_string(health)).c_str());
+        sensei.print(10, 50, (std::string("lives: ") + std::to_string(lives)).c_str());
 
         sensei.presentScreen();
 }
