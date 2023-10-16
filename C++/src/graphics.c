@@ -321,7 +321,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 		{
 			const uint8_t *bitmap = character_bitmap + (k + j * w) / 8;
 			if (*bitmap & 1 << 7 - (k + j * w) % 8)
-				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);   // TODO: fix char origin
+				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);   
 		}
 }
 

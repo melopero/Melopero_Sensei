@@ -41,6 +41,7 @@ static const uint8_t playerProjectileVel = 160;  // px/sec
 int starshipX, starshipY;
 int starshipVx, starshipVy;
 
+static const uint8_t winScore = 40;
 uint8_t score;
 uint8_t lives;
 uint8_t health;
@@ -245,7 +246,7 @@ void renderMenu()
 {
     sensei.clearScreen(0x00, 0x00, 0x00);
 
-    sensei.drawSprite(menu2, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    sensei.drawSprite(menu, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     sensei.presentScreen();
 }
@@ -491,6 +492,9 @@ void updatePlay(float deltaTimeSec)
 
         if (starshipY + starshipHeight >= DISPLAY_HEIGHT)
             starshipY = DISPLAY_HEIGHT - starshipHeight;
+
+        if (score == winScore)
+            gameState = GameState::WIN;
 }
 
 void renderPlay()
@@ -576,11 +580,20 @@ void renderPlay()
         }
 
         // render HUD
-        sensei.setTextFont(FREE_SANS_BOLD, SMALL);
-        sensei.setTextColor(0xFF, 0x00, 0x00);
-        sensei.print(10, 10, (std::string("score: ") + std::to_string(score)).c_str());
-        sensei.print(10, 30, (std::string("health: ") + std::to_string(health)).c_str());
-        sensei.print(10, 50, (std::string("lives: ") + std::to_string(lives)).c_str());
+        sensei.setTextFont(FREE_SANS, VERY_SMALL);
+        sensei.setTextColor(0xFF, 0xFF, 0x00);
+        sensei.print(5, 20, (std::string("score: ") + std::to_string(score)).c_str());
+        
+        if (health < 3)
+            sensei.setTextColor(0xFF, 0x00, 0x00);
+        else if (health < 6)
+            sensei.setTextColor(0xFF, 0xFF, 0x00);
+        else
+            sensei.setTextColor(0xFF, 0xFF, 0xFF);
+        sensei.print(5, 40, (std::string("health: ") + std::to_string(health)).c_str());
+        
+        sensei.setTextColor(0x00, 0x00, 0xFF);
+        sensei.print(5, 60, (std::string("lives: ") + std::to_string(lives)).c_str());
 
         sensei.presentScreen();
 }
@@ -628,32 +641,47 @@ void renderLifeLost()
 {
     sensei.clearScreen(0x00, 0x00, 0x00);
 
-    //sensei.drawSprite(destroyed, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    sensei.drawSprite(splash, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    sensei.setTextColor(0xFF, 0xFF, 0xFF);
+    sensei.setTextFont(FREE_SANS_BOLD, SMALL);
+    sensei.print(30, 80, "DESTROYED!");
+    sensei.print(60, 180, "try again");
 
     sensei.presentScreen();
 }
 
 void updateWin(float deltaTimeSec)
 {
-
+    if (sensei.getButtonState(A) == JUST_PRESSED)
+        gameState = GameState::MENU;
 }
 
 void renderWin()
 {
+    sensei.clearScreen(0x00, 0x00, 0x00);
 
+    sensei.drawSprite(splash, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    sensei.setTextColor(0xFF, 0xFF, 0xFF);
+    sensei.setTextFont(FREE_SANS_BOLD, SMALL);
+    sensei.print(50, 80, "You WIN!");
+    sensei.print(10, 130, "The earth is safe!");
+    sensei.setTextFont(FREE_SANS_BOLD, VERY_SMALL);
+    sensei.print(10, 190, "press \"A\" to play again");
+
+    sensei.presentScreen();
 }
 
 void updateGameOver(float deltaTimeSec)
 {
-        if (sensei.getButtonState(A) == JUST_PRESSED)
-                    gameState = GameState::MENU;
+    if (sensei.getButtonState(A) == JUST_PRESSED)
+        gameState = GameState::MENU;
 }
 
 void renderGameOver()
 {
     sensei.clearScreen(0x00, 0x00, 0x00);
 
-    //sensei.drawSprite(game_over, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    sensei.drawSprite(game_over, 0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     sensei.presentScreen();
 }
