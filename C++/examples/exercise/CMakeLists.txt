@@ -1,0 +1,28 @@
+add_compile_definitions(PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
+
+add_executable(exercise 
+        exercise.cpp
+        ../../src/SPI.c
+        ../../src/ST7789.c
+        ../../src/graphics.c
+        ../../src/I2C.c
+        ../../src/io_expander.c
+        ../../src/input.c
+        ../../src/PWM.c
+        ../../src/fifo.c
+        ../../src/audio.c
+        ../../src/MeloperoSensei.cpp
+)
+
+# pull in common dependencies
+target_link_libraries(exercise
+        pico_stdlib
+        hardware_spi
+        hardware_i2c
+        hardware_pwm
+        hardware_clocks
+        pico_rand
+)
+
+ # create map/bin/hex file etc.
+pico_add_extra_outputs(exercise)
