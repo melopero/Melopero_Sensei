@@ -4,19 +4,6 @@
 #include <stdint.h>
 #include "ST7789.h"
 
-typedef struct point_2D
-{
-	int x;
-	int y;
-} point_2D;
-
-typedef struct triangle
-{
-	point_2D p1;
-	point_2D p2;
-	point_2D p3;
-} triangle;
-
 enum font_name
 {
 	FREE_MONO, FREE_MONO_BOLD, FREE_SANS, FREE_SANS_BOLD,
