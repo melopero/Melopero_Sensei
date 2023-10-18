@@ -11,6 +11,8 @@ extern "C"
 #include "audio.h"
 }
 
+#include <string>
+
 class MeloperoSensei
 {
 public:
@@ -40,7 +42,7 @@ public:
 
     void drawChar(uint16_t x, uint16_t y, char c);
 
-    void print(uint8_t posX, uint8_t posY, const char *string);
+    void print(uint8_t posX, uint8_t posY, std::string const &string);
 
     /**** input interface ****/
 

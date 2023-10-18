@@ -67,11 +67,11 @@ void MeloperoSensei::drawChar(uint16_t x, uint16_t y, char c)
     graphics_draw_char(x, y, c);
 }
 
-void MeloperoSensei::print(uint8_t posX, uint8_t posY, const char *string)
+void MeloperoSensei::print(uint8_t posX, uint8_t posY, const std::string &string)
 {
     graphics_set_cursor_x(posX);
     graphics_set_cursor_y(posY);
-    graphics_print(string);
+    graphics_print(string.c_str());
 }
 
 /**** input interface ****/
