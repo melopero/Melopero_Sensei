@@ -53,12 +53,6 @@ void input_init(void)
     io_expander_enable_pin_irq(CENTER, ENABLE);
     io_expander_enable_pin_irq(A, ENABLE);
     io_expander_enable_pin_irq(B, ENABLE);
-
-    // gpio_init(INT_PIN);
-    // gpio_set_dir(INT_PIN, false);
-    // gpio_set_pulls(INT_PIN, false, false);
-    // gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, true, gpio_irq_callback);
-    //io_expander_acknowledge_interrupt();  
 }
 
 ButtonState input_get_button_state(uint8_t button)
@@ -71,7 +65,7 @@ ButtonState input_get_button_state(uint8_t button)
     static bool AButtonStateOld = false;
     static bool BButtonStateOld = false;
 
-    bool buttonStateCurrent, buttonStateOld;
+    bool buttonStateCurrent = false, buttonStateOld = false;
 
     switch (button)
     {
@@ -130,10 +124,39 @@ ButtonState input_get_button_state(uint8_t button)
             return RELEASED;
 }
 
+bool input_is_pressed(uint8_t button)
+{
+    return input_get_button_state(button) == JUST_PRESSED || input_get_button_state(button) == PRESSED;
+}
+
 bool input_get_button(uint8_t button)
 {
     bool status = io_expander_get_pin_status(button);
     return !status;
+}
+
+uint8_t input_get_interrupt_register()
+{
+    return io_expander_get_interrupt_register();
+}
+
+bool input_get_button_irq_state(uint8_t button)
+{
+    return io_expander_get_pin_irq_state(button);
+}
+
+void input_enable_interrupt(bool enable)
+{
+    if (enable)
+    {
+        gpio_init(INT_PIN);
+        gpio_set_dir(INT_PIN, false);
+        gpio_set_pulls(INT_PIN, false, false);
+        gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, true, gpio_irq_callback);
+        io_expander_acknowledge_interrupt();  
+    }
+    else
+        gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, false, gpio_irq_callback);
 }
 
 // note: use either IRQ or polling (race condition - I2C shared resource)
@@ -141,3 +164,4 @@ void gpio_irq_callback(uint gpio, uint32_t event_mask)
 {
     io_expander_acknowledge_interrupt();
 }
+

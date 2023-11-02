@@ -13,7 +13,7 @@ void graphics_init()
 uint16_t graphics_RGB_to_16(uint8_t red, uint8_t green, uint8_t blue)
 {
 	uint16_t color = (uint16_t)(red & 0xF8) << 8 | (uint16_t)(green & 0xFC) << 3 | blue >> 3;
-	return color >> 8 & 0x00FF | color << 8;
+	return (color >> 8 & 0x00FF) | color << 8;
 }
 
 void graphics_present_framebuffer(void)
@@ -312,7 +312,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 	int offset_x = glyph_def[4];
 	int offset_y = glyph_def[5];
 
-	int byte_length = glyph_defs[c - 32 + 1][0] - *glyph_def;
+	//int byte_length = glyph_defs[c - 32 + 1][0] - *glyph_def;
 
 	const uint8_t *character_bitmap = &font_bitmap[index];
 
@@ -320,7 +320,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 		for (int k = 0; k < w; k++)
 		{
 			const uint8_t *bitmap = character_bitmap + (k + j * w) / 8;
-			if (*bitmap & 1 << 7 - (k + j * w) % 8)
+			if (*bitmap & 1 << (7 - (k + j * w) % 8))
 				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);   
 		}
 }

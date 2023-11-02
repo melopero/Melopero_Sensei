@@ -38,4 +38,7 @@ bool io_expander_get_pin_status(uint8_t pin);
 bool io_expander_get_pin_irq_status(uint8_t pin);
 void io_expander_acknowledge_interrupt();
 
+uint8_t io_expander_get_interrupt_register();
+bool io_expander_get_pin_irq_state(uint8_t pin);
+
 #endif  // IO_EXPANDER_H

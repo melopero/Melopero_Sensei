@@ -185,7 +185,7 @@ void updateShowLogo(float dt)
 
 void renderShowLogo()
 {
-    sensei.clearScreen(0x00, 0x00, 0x00);
+    sensei.clearScreen(0xCD, 0x23, 0x055);
     sensei.drawSprite(melopero_logo, logoX, logoY, logoWidth, logoHeight);
     sensei.presentScreen();
 }

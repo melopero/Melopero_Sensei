@@ -107,3 +107,13 @@ void io_expander_acknowledge_interrupt()
 {
     (void)io_expander_read_register(INTERRUPT_STATUS_REGISTER);
 }
+
+uint8_t io_expander_get_interrupt_register()
+{
+    return io_expander_read_register(INTERRUPT_STATUS_REGISTER);
+}
+
+bool io_expander_get_pin_irq_state(uint8_t pin)
+{
+    return io_expander_get_register_bit(INTERRUPT_STATUS_REGISTER, pin);
+}

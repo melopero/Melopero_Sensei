@@ -48,6 +48,14 @@ public:
 
     ButtonState getButtonState(uint8_t button);
 
+    bool isButtonPressed(uint8_t button);
+
+    void enableButtonInterrupt(bool enable);
+
+    bool getButtonIRQState(uint8_t button);
+
+    uint8_t getInputInterruptRegister();
+
     /**** audio interface ****/
 
     void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);

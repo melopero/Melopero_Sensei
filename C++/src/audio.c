@@ -39,6 +39,7 @@ void audio_play_note(float frequency, uint32_t duration, float volume, bool swee
 bool audio_callback(repeating_timer_t *rt)
 {
     if (n.elapsed >= n.duration)
+    {
         if (!FIFO_is_empty(audio_FIFO))
         {
             n = FIFO_get(audio_FIFO);
@@ -49,8 +50,10 @@ bool audio_callback(repeating_timer_t *rt)
             n.duration = 0;
             PWM_set_compare_value(0); 
         }
+    }
 
     if (n.duration)
+    {
         if (++n.elapsed < n.duration)
         {
             if (n.sweep_time)
@@ -58,6 +61,7 @@ bool audio_callback(repeating_timer_t *rt)
             
             PWM_set_frequency(n.frequency);    // update pwm   
         }
+    }
 
     return true;
 }

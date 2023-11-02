@@ -5,6 +5,8 @@ int main()
 {
     MeloperoSensei sensei;
 
+    sensei.enableButtonInterrupt(true);
+
     while (true)
     {
         sensei.clearScreen(0x00, 0xAA, 0xFF);

@@ -81,6 +81,26 @@ ButtonState MeloperoSensei::getButtonState(uint8_t button)
     return input_get_button_state(button);
 }
 
+bool isButtonPressed(uint8_t button)
+{
+    return input_get_button_state(button) == JUST_PRESSED || input_get_button_state(button) == PRESSED;
+}
+
+void MeloperoSensei::enableButtonInterrupt(bool enable)
+{
+    input_enable_interrupt(enable);
+}
+
+bool MeloperoSensei::getButtonIRQState(uint8_t button)
+{
+    return input_get_button_irq_state(button);
+}
+
+uint8_t MeloperoSensei::getInputInterruptRegister()
+{
+    return input_get_interrupt_register();
+}
+
 /**** audio interface ****/
 
 void MeloperoSensei::playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time)
