@@ -2,16 +2,17 @@
 
 MeloperoSensei::MeloperoSensei()
 {
-    SPI1Init();
-    I2C1Init();
-    graphics_init();
-    input_init();
-    VSENEnable(true);
-    audio_init();
+    // SPI1Init();
+    // I2C1Init();
+    // graphics_init();
+    // input_init();
+    // VSENEnable(true);
+    // audio_init();
 }
 
 MeloperoSensei::~MeloperoSensei()
 {
+    graphics_deinit();
 }
 
 /**** graphics interface ****/

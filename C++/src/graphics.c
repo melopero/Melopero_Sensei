@@ -1,13 +1,21 @@
 #include <stdint.h>
+#include <stdlib.h>
 #include "graphics.h"
 #include "ST7789.h"
 #include "font.h"
 
-static uint16_t frame_buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+static uint16_t *frame_buffer;
 
 void graphics_init()
 {
 	ST7789_init();
+
+	//frame_buffer = (uint16_t*)malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * 2);
+}
+
+void graphics_deinit()
+{
+	free(frame_buffer);
 }
 
 uint16_t graphics_RGB_to_16(uint8_t red, uint8_t green, uint8_t blue)
