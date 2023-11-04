@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include "SPI.h"
 
-#define DISPLAY_WIDTH           240
-#define DISPLAY_HEIGHT          240
+#define DISPLAY_WIDTH           1
+#define DISPLAY_HEIGHT          1
 
 typedef struct ST7789_config_t
 {

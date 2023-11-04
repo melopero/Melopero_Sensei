@@ -9,7 +9,7 @@ add_executable(demo
         ../../src/io_expander.c
         ../../src/input.c
         ../../src/PWM.c
-        ../../src/fifo.c
+        ../../src/audio_fifo.c
         ../../src/audio.c
         ../../src/MeloperoSensei.cpp
 )

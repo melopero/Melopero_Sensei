@@ -12,7 +12,6 @@ MeloperoSensei::MeloperoSensei()
 
 MeloperoSensei::~MeloperoSensei()
 {
-    audio_deinit();
 }
 
 /**** graphics interface ****/

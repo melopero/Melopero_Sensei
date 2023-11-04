@@ -38,15 +38,8 @@ void I2C_read_reg(uint8_t address, uint8_t reg, uint8_t *dst, size_t len, bool s
 }
 
 void I2C_write_reg(uint8_t address, uint8_t reg, uint8_t const *src, size_t len, bool stop)
-{
-    // For some reason, this doesn't work:
-    // Set register to write
-    //I2C_write(address, &reg, 1, false);
-    // Write data to register
-    //I2C_write(address, src, len, stop);
-    
-    // Updated working version:
-    uint8_t* buf = (uint8_t*) malloc((len + 1) * sizeof(uint8_t));
+{  
+    uint8_t buf[len];
     buf[0] = reg;
     memcpy(buf + 1, src, len);
     I2C_write(address, buf, len + 1, stop);
