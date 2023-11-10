@@ -10,7 +10,14 @@ void graphics_init()
 {
 	ST7789_init();
 
-	//frame_buffer = (uint16_t*)malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * 2);
+	frame_buffer = (uint16_t*)malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * 2);
+}
+
+void graphics_init_mp(void *buffer)
+{
+	ST7789_init();
+
+	frame_buffer = buffer;
 }
 
 void graphics_deinit()

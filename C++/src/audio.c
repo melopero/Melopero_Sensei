@@ -16,6 +16,8 @@ void audio_init(void)
     PWM_init(&config);
 
     add_repeating_timer_ms(-1, audio_callback, NULL, &audio_repeating_timer);
+
+    FIFO_init();
 }
 
 static note n = {0.0f, 0.0f, 0.0f, false, 0.0f, 0};

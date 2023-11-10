@@ -15,6 +15,7 @@ enum font_size
 };
 
 void graphics_init();
+void graphics_init_mp(void *buffer);
 void graphics_deinit();
 
 //uint16_t graphics_RGB_to_16(uint8_t red, uint8_t green, uint8_t blue);

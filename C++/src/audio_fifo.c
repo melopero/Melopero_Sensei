@@ -4,7 +4,7 @@
 
 #define AUDIO_BUFFER_SIZE  100
 
-static note buffer[100];
+static note buffer[AUDIO_BUFFER_SIZE];
 static uint32_t head;
 static uint32_t tail;
 static uint32_t size;
@@ -13,6 +13,7 @@ void FIFO_init()
 {
     head = 0;
     tail = 0;
+    size = AUDIO_BUFFER_SIZE;
 } 
 
 void FIFO_insert(note n)
@@ -23,6 +24,7 @@ void FIFO_insert(note n)
         tail %= size;
     }
 }
+
 note FIFO_get()
 {
     if (!FIFO_is_empty())

@@ -18,6 +18,8 @@ class MeloperoSensei
 public:
     MeloperoSensei();
 
+    MeloperoSensei(void *buffer);
+
     ~MeloperoSensei();
 
     /**** graphics interface ****/
@@ -112,6 +114,8 @@ private:
 
         graphics_present_framebuffer();
     }
+
+    bool graphicsMP = false;
 };
 
 #endif  // MELOPEROSENSEI_H

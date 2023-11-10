@@ -2,17 +2,29 @@
 
 MeloperoSensei::MeloperoSensei()
 {
-    // SPI1Init();
-    // I2C1Init();
-    // graphics_init();
-    // input_init();
-    // VSENEnable(true);
-    // audio_init();
+    SPI1Init();
+    I2C1Init();
+    graphics_init();
+    input_init();
+    VSENEnable(true);
+    audio_init();
+}
+
+MeloperoSensei::MeloperoSensei(void *buffer)
+{
+    SPI1Init();
+    I2C1Init();
+    graphics_init_mp(buffer);
+    graphicsMP = true;
+    input_init();
+    VSENEnable(true);
+    audio_init();
 }
 
 MeloperoSensei::~MeloperoSensei()
 {
-    graphics_deinit();
+    if (!graphicsMP)
+        graphics_deinit();
 }
 
 /**** graphics interface ****/
