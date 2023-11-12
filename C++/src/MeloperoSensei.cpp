@@ -97,7 +97,7 @@ ButtonState MeloperoSensei::getButtonState(uint8_t button)
 
 bool isButtonPressed(uint8_t button)
 {
-    return input_get_button_state(button) == JUST_PRESSED || input_get_button_state(button) == PRESSED;
+    return input_is_pressed(button);
 }
 
 void MeloperoSensei::enableButtonInterrupt(bool enable)
@@ -123,7 +123,7 @@ void MeloperoSensei::playNote(float frequency, uint32_t duration, float volume, 
 }
 
 /**** analog interface ****/
-uint16_t MeloperoSensei::getLightLevel()
+uint8_t MeloperoSensei::getLightLevel()
 {
     return analog_read_light();
 }
