@@ -1,6 +1,8 @@
 #ifndef MELOPEROSENSEI_H
 #define MELOPEROSENSEI_H
 
+#include <string>
+
 extern "C"
 {
 #include "hardware/gpio.h"
@@ -9,9 +11,8 @@ extern "C"
 #include "graphics.h"
 #include "input.h"
 #include "audio.h"
+#include "analog.h"
 }
-
-#include <string>
 
 class MeloperoSensei
 {
@@ -62,6 +63,13 @@ public:
 
     void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
 
+    /**** analog interface ****/    
+    uint16_t getLightLevel();
+    
+    uint8_t getBatteryLevel();  // 0.0 -> 1.0
+
+    float getTemperature();
+
     /**** game loop ****/
 
     virtual void setup() {}
@@ -80,40 +88,17 @@ private:
     static const uint8_t SPI1_CS{9};
     static const uint32_t SPI1_FREQUENCY{125 * 1000 * 1000};
     static const uint8_t SPI1_NUM_BITS{8};
-
-    void SPI1Init()
-    {
-        spi_config config = { spi1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI1_CS, SPI1_FREQUENCY, SPI1_NUM_BITS, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST };
-        SPI_init(&config);
-    }
+    void SPI1Init();
 
     static const uint8_t I2C1_SDA{6};
     static const uint8_t I2C1_SCL{7};
-    static const uint32_t I2C1_FREQUENCY{100000};
-    
-    void I2C1Init()
-    {
-        i2c_config config = { i2c1, I2C1_SDA, I2C1_SCL, I2C1_FREQUENCY };
-        I2C_init(&config);
-    }
+    static const uint32_t I2C1_FREQUENCY{100000};    
+    void I2C1Init();
 
     static const uint8_t VSEN_PIN{17};
+    void VSENEnable(bool enable);
 
-    void VSENEnable(bool enable)
-    {
-        gpio_init(VSEN_PIN);
-        gpio_set_dir(VSEN_PIN, true);
-        gpio_put(VSEN_PIN, enable);
-    }
-
-    void render()
-    {
-        graphics_clear_framebuffer(0x00, 0x00, 0x00);
-
-        draw();
-
-        graphics_present_framebuffer();
-    }
+    void render();
 
     bool graphicsMP = false;
 };

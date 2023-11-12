@@ -8,6 +8,7 @@ MeloperoSensei::MeloperoSensei()
     input_init();
     VSENEnable(true);
     audio_init();
+    analog_init();
 }
 
 MeloperoSensei::MeloperoSensei(void *buffer)
@@ -19,6 +20,7 @@ MeloperoSensei::MeloperoSensei(void *buffer)
     input_init();
     VSENEnable(true);
     audio_init();
+    analog_init();
 }
 
 MeloperoSensei::~MeloperoSensei()
@@ -120,6 +122,22 @@ void MeloperoSensei::playNote(float frequency, uint32_t duration, float volume, 
     audio_play_note(frequency, duration, volume, sweep_direction, sweep_time);
 }
 
+/**** analog interface ****/
+uint16_t MeloperoSensei::getLightLevel()
+{
+    return analog_read_light();
+}
+    
+uint8_t MeloperoSensei::getBatteryLevel()
+{
+    return analog_read_battery();
+}
+
+float MeloperoSensei::getTemperature()
+{
+    return analog_read_temperature();
+}
+
 /**** game loop ****/
 
 void MeloperoSensei::run()
@@ -131,4 +149,34 @@ void MeloperoSensei::run()
         update();
         render();
     }
+}
+
+/**** private implementation ****/
+
+void MeloperoSensei::SPI1Init()
+{
+    spi_config config = { spi1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI1_CS, SPI1_FREQUENCY, SPI1_NUM_BITS, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST };
+    SPI_init(&config);
+}
+
+void MeloperoSensei::I2C1Init()
+{
+    i2c_config config = { i2c1, I2C1_SDA, I2C1_SCL, I2C1_FREQUENCY };
+    I2C_init(&config);
+}
+
+void MeloperoSensei::VSENEnable(bool enable)
+{
+    gpio_init(VSEN_PIN);
+    gpio_set_dir(VSEN_PIN, true);
+    gpio_put(VSEN_PIN, enable);
+}
+
+void MeloperoSensei::render()
+{
+    graphics_clear_framebuffer(0x00, 0x00, 0x00);
+
+    draw();
+
+    graphics_present_framebuffer();
 }
