@@ -66,7 +66,7 @@ public:
     /**** analog interface ****/    
     uint16_t getLightLevel();
     
-    uint8_t getBatteryLevel();  // 0.0 -> 1.0
+    uint8_t getBatteryLevel(); 
 
     float getTemperature();
 
