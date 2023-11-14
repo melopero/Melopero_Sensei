@@ -1,19 +1,34 @@
 #include <stdint.h>
+#include <stdlib.h>
 #include "graphics.h"
 #include "ST7789.h"
 #include "font.h"
 
-static uint16_t frame_buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+static uint16_t *frame_buffer;
 
 void graphics_init()
 {
 	ST7789_init();
+
+	frame_buffer = (uint16_t*)malloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * 2);
+}
+
+void graphics_init_mp(void *buffer)
+{
+	ST7789_init();
+
+	frame_buffer = buffer;
+}
+
+void graphics_deinit()
+{
+	free(frame_buffer);
 }
 
 uint16_t graphics_RGB_to_16(uint8_t red, uint8_t green, uint8_t blue)
 {
 	uint16_t color = (uint16_t)(red & 0xF8) << 8 | (uint16_t)(green & 0xFC) << 3 | blue >> 3;
-	return color >> 8 & 0x00FF | color << 8;
+	return (color >> 8 & 0x00FF) | color << 8;
 }
 
 void graphics_present_framebuffer(void)
@@ -312,7 +327,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 	int offset_x = glyph_def[4];
 	int offset_y = glyph_def[5];
 
-	int byte_length = glyph_defs[c - 32 + 1][0] - *glyph_def;
+	//int byte_length = glyph_defs[c - 32 + 1][0] - *glyph_def;
 
 	const uint8_t *character_bitmap = &font_bitmap[index];
 
@@ -320,7 +335,7 @@ void graphics_draw_char(uint16_t x, uint16_t y, char c)
 		for (int k = 0; k < w; k++)
 		{
 			const uint8_t *bitmap = character_bitmap + (k + j * w) / 8;
-			if (*bitmap & 1 << 7 - (k + j * w) % 8)
+			if (*bitmap & 1 << (7 - (k + j * w) % 8))
 				graphics_draw_pixel(x + k + offset_x, y + j + offset_y, text_red, text_green, text_blue);   
 		}
 }
@@ -345,17 +360,17 @@ void graphics_print(const char *string)
 		}
 		else
 		{
-			if (x_pos + char_width - 1 > DISPLAY_WIDTH - 1)
-			{
-				x_pos = 0;
-				y_pos += vertical_spacing;
-			}
-			if (y_pos + vertical_spacing - 1 > DISPLAY_HEIGHT - 1)
-			{
-				graphics_clear_framebuffer(0x00, 0x00, 0x00);
-				x_pos = 0;
-				y_pos = 0;
-			}
+			// if (x_pos + char_width - 1 > DISPLAY_WIDTH - 1)
+			// {
+			// 	x_pos = 0;
+			// 	y_pos += vertical_spacing;
+			// }
+			// if (y_pos + vertical_spacing - 1 > DISPLAY_HEIGHT - 1)
+			// {
+			// 	graphics_clear_framebuffer(0x00, 0x00, 0x00);
+			// 	x_pos = 0;
+			// 	y_pos = 0;
+			// }
 			graphics_draw_char(x_pos, y_pos, *string++);
 			x_pos += char_width + 1;
 		}

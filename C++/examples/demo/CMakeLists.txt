@@ -1,7 +1,7 @@
 add_compile_definitions(PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
 
-add_executable(SHMUP 
-        game.cpp
+add_executable(demo 
+        demo.cpp
         ../../src/SPI.c
         ../../src/ST7789.c
         ../../src/graphics.c
@@ -15,7 +15,7 @@ add_executable(SHMUP
 )
 
 # pull in common dependencies
-target_link_libraries(SHMUP
+target_link_libraries(demo
         pico_stdlib
         hardware_spi
         hardware_i2c
@@ -25,4 +25,4 @@ target_link_libraries(SHMUP
 )
 
  # create map/bin/hex file etc.
-pico_add_extra_outputs(SHMUP)
+pico_add_extra_outputs(demo)

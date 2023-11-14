@@ -4,19 +4,6 @@
 #include <stdint.h>
 #include "ST7789.h"
 
-typedef struct point_2D
-{
-	int x;
-	int y;
-} point_2D;
-
-typedef struct triangle
-{
-	point_2D p1;
-	point_2D p2;
-	point_2D p3;
-} triangle;
-
 enum font_name
 {
 	FREE_MONO, FREE_MONO_BOLD, FREE_SANS, FREE_SANS_BOLD,
@@ -28,6 +15,8 @@ enum font_size
 };
 
 void graphics_init();
+void graphics_init_mp(void *buffer);
+void graphics_deinit();
 
 //uint16_t graphics_RGB_to_16(uint8_t red, uint8_t green, uint8_t blue);
 void graphics_present_framebuffer(void);

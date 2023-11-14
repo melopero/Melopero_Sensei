@@ -15,7 +15,7 @@ pico_sdk_init()
 # Tell CMake where to find the executable source file
 add_executable(${PROJECT_NAME} 
     ../../src/audio.c
-    ../../src/fifo.c
+    ../../src/audio_fifo.c
     ../../src/graphics.c
     ../../src/I2C.c
     ../../src/input.c

@@ -16,7 +16,6 @@ typedef struct note
 } note;
 
 void audio_init(void);
-void audio_deinit(void);
 void audio_play_note(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
 
 #endif  // AUDIO_H

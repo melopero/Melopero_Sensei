@@ -18,6 +18,9 @@ pico_sdk_init()
 
 add_subdirectory(C++/examples/SHMUP)
 add_subdirectory(C++/examples/exercise)
+add_subdirectory(C++/examples/imu)
+add_subdirectory(C++/examples/touch)
+add_subdirectory(C++/examples/demo)
 
 add_compile_options(-Wall
         -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int

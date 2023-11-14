@@ -9,8 +9,9 @@ add_executable(exercise
         ../../src/io_expander.c
         ../../src/input.c
         ../../src/PWM.c
-        ../../src/fifo.c
+        ../../src/audio_fifo.c
         ../../src/audio.c
+        ../../src/analog.c
         ../../src/MeloperoSensei.cpp
 )
 
@@ -21,6 +22,7 @@ target_link_libraries(exercise
         hardware_i2c
         hardware_pwm
         hardware_clocks
+        hardware_adc
         pico_rand
 )
 
