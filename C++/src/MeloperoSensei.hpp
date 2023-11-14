@@ -64,7 +64,11 @@ public:
     void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
 
     /**** analog interface ****/  
-      
+
+    void setLightMin();
+
+    void setLightMax();
+    
     uint8_t getLightLevel();
     
     uint8_t getBatteryLevel(); 

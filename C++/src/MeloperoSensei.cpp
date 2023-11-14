@@ -123,6 +123,17 @@ void MeloperoSensei::playNote(float frequency, uint32_t duration, float volume, 
 }
 
 /**** analog interface ****/
+
+void MeloperoSensei::setLightMin()
+{
+    analog_set_light_min();
+}
+
+void MeloperoSensei::setLightMax()
+{
+    analog_set_light_max();
+}
+
 uint8_t MeloperoSensei::getLightLevel()
 {
     return analog_read_light();

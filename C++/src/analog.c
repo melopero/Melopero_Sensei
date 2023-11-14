@@ -52,14 +52,16 @@ void analog_set_light_min()
 {
     adc_select_input(LIGHT_PIN - ADC_GPIO_BASE);
 
-    light_min_v = adc_read();
+    uint16_t light_min_raw = adc_read();
+    light_min_v = (float)light_min_raw / ADC_SAMPLE_LEVELS * ADC_VREF;
 }
 
 void analog_set_light_max()
 {
     adc_select_input(LIGHT_PIN - ADC_GPIO_BASE);
     
-    light_max_v = adc_read();
+    uint16_t light_max_raw = adc_read();
+    light_max_v = (float)light_max_raw / ADC_SAMPLE_LEVELS * ADC_VREF;
 }
 
 uint8_t analog_read_light()

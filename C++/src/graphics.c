@@ -360,17 +360,17 @@ void graphics_print(const char *string)
 		}
 		else
 		{
-			if (x_pos + char_width - 1 > DISPLAY_WIDTH - 1)
-			{
-				x_pos = 0;
-				y_pos += vertical_spacing;
-			}
-			if (y_pos + vertical_spacing - 1 > DISPLAY_HEIGHT - 1)
-			{
-				graphics_clear_framebuffer(0x00, 0x00, 0x00);
-				x_pos = 0;
-				y_pos = 0;
-			}
+			// if (x_pos + char_width - 1 > DISPLAY_WIDTH - 1)
+			// {
+			// 	x_pos = 0;
+			// 	y_pos += vertical_spacing;
+			// }
+			// if (y_pos + vertical_spacing - 1 > DISPLAY_HEIGHT - 1)
+			// {
+			// 	graphics_clear_framebuffer(0x00, 0x00, 0x00);
+			// 	x_pos = 0;
+			// 	y_pos = 0;
+			// }
 			graphics_draw_char(x_pos, y_pos, *string++);
 			x_pos += char_width + 1;
 		}
