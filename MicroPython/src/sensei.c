@@ -52,6 +52,7 @@ MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_rect_obj, 1, MeloperoSensei_draw_
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_fill_rect_obj, 1, MeloperoSensei_draw_fill_rect);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_line_obj, 1, MeloperoSensei_draw_line);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_pixel_obj, 1, MeloperoSensei_draw_pixel);
+MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_sprite_obj, 1, MeloperoSensei_draw_sprite);
 MP_DEFINE_CONST_FUN_OBJ_3(MeloperoSensei_set_text_font_obj, MeloperoSensei_set_text_font);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_cpu_temp_obj, MeloperoSensei_get_cpu_temp);
 
@@ -70,6 +71,7 @@ STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_draw_fill_rect), MP_ROM_PTR(&MeloperoSensei_draw_fill_rect_obj) },
     { MP_ROM_QSTR(MP_QSTR_draw_line), MP_ROM_PTR(&MeloperoSensei_draw_line_obj) },
     { MP_ROM_QSTR(MP_QSTR_draw_pixel), MP_ROM_PTR(&MeloperoSensei_draw_pixel_obj) },
+    { MP_ROM_QSTR(MP_QSTR_draw_sprite), MP_ROM_PTR(&MeloperoSensei_draw_sprite_obj) },
    
 };
 STATIC MP_DEFINE_CONST_DICT(MeloperoSensei_locals_dict, MeloperoSensei_locals_dict_table);

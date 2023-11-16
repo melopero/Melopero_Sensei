@@ -220,7 +220,41 @@ mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_m
     return mp_const_none;
 }
 
+mp_obj_t MeloperoSensei_draw_sprite(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
+    enum { ARG_self, ARG_buffer, ARG_posx, ARG_posy, ARG_width, ARG_height};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_buffer, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_posx, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_posy, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_width, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_height, MP_ARG_INT, {.u_int = 0} },
+      
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    // Convert bytearray to uint16_t*
+    mp_buffer_info_t buf_info;
+    mp_obj_t data_obj = args[ARG_buffer].u_obj;
+    mp_get_buffer_raise(data_obj, &buf_info, MP_BUFFER_READ);
+
+    uint16_t *data_ptr = (uint16_t *)buf_info.buf;
+    uint16_t posx = args[ARG_posx].u_int;
+    uint16_t posy = args[ARG_posy].u_int;
+    uint16_t width = args[ARG_width].u_int;
+    uint16_t height = args[ARG_height].u_int;
+
+    
+    
+    self->sensei->drawSprite(data_ptr,posx,posy,width, height);
+
+    return mp_const_none;
+}
 
 mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 

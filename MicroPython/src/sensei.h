@@ -40,12 +40,12 @@ extern mp_obj_t MeloperoSensei_write_text(size_t n_args, const mp_obj_t *pos_arg
 extern mp_obj_t MeloperoSensei_draw_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_draw_fill_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_draw_line(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_draw_sprite(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_set_text_font(mp_obj_t self_in, mp_obj_t font, mp_obj_t size);
 extern mp_obj_t MeloperoSensei_set_display_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_clear_screen(size_t n_args, const mp_obj_t *args);
 extern mp_obj_t MeloperoSensei_update_display(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in);
-extern mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 
-//mp_obj_t self_in, mp_obj_t x, mp_obj_t y
