@@ -1,14 +1,10 @@
 /*
-Melopero Cookie RP2040 Micropython library. 
+Melopero Sensei Micropython library. 
 
-Authors: Francesco Marchetti, Luca Davidian
-
-Get your Cookie RP2040 here: 
-http://melopero.com/melopero-cookie-rp2040
+Authors: Luca Davidian, Leonardo La Rocca, Francesco Marchetti
 
 Copyright 2023 Melopero S.r.l. - www.melopero.com
-
-First release March 2023
+First release November 2023
 
 */
 
@@ -100,6 +96,132 @@ mp_obj_t MeloperoSensei_write_text(size_t n_args, const mp_obj_t *pos_args, mp_m
 
 
 
+mp_obj_t MeloperoSensei_draw_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+
+    enum { ARG_self, ARG_posx, ARG_posy, ARG_width, ARG_height, ARG_red, ARG_green, ARG_blue};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_posx, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_posy, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_width, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_height, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_red, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_green, MP_ARG_INT, {.u_int = 100} },
+        { MP_QSTR_blue, MP_ARG_INT, {.u_int = 20} },
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    int posx = args[ARG_posx].u_int;
+    int posy = args[ARG_posy].u_int;
+    int width = args[ARG_width].u_int;
+    int height = args[ARG_height].u_int;
+    int red = args[ARG_red].u_int;
+    int green = args[ARG_green].u_int;
+    int blue = args[ARG_blue].u_int;
+    
+    self->sensei->drawRect(posx,posy,width, height, red, green, blue);
+
+    return mp_const_none;
+}
+
+mp_obj_t MeloperoSensei_draw_fill_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+
+    enum { ARG_self, ARG_posx, ARG_posy, ARG_width, ARG_height, ARG_red, ARG_green, ARG_blue};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_posx, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_posy, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_width, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_height, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_red, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_green, MP_ARG_INT, {.u_int = 100} },
+        { MP_QSTR_blue, MP_ARG_INT, {.u_int = 20} },
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    int posx = args[ARG_posx].u_int;
+    int posy = args[ARG_posy].u_int;
+    int width = args[ARG_width].u_int;
+    int height = args[ARG_height].u_int;
+    int red = args[ARG_red].u_int;
+    int green = args[ARG_green].u_int;
+    int blue = args[ARG_blue].u_int;
+    
+    self->sensei->drawFillRect(posx,posy,width, height, red, green, blue);
+
+    return mp_const_none;
+}
+
+mp_obj_t MeloperoSensei_draw_line(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+
+    enum { ARG_self, ARG_startx, ARG_starty, ARG_endx, ARG_endy, ARG_red, ARG_green, ARG_blue};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_startx, MP_ARG_INT },
+        { MP_QSTR_starty, MP_ARG_INT },
+        { MP_QSTR_endx, MP_ARG_INT },
+        { MP_QSTR_endy, MP_ARG_INT },
+        { MP_QSTR_red, MP_ARG_INT },
+        { MP_QSTR_green, MP_ARG_INT },
+        { MP_QSTR_blue, MP_ARG_INT },
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    int startx = args[ARG_startx].u_int;
+    int starty = args[ARG_starty].u_int;
+    int endx = args[ARG_endx].u_int;
+    int endy = args[ARG_endy].u_int;
+    int red = args[ARG_red].u_int;
+    int green = args[ARG_green].u_int;
+    int blue = args[ARG_blue].u_int;
+    
+    self->sensei->drawLine(startx,starty,endx,endy, red, green, blue);
+
+    return mp_const_none;
+}
+
+mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+
+    enum { ARG_self, ARG_posx, ARG_posy, ARG_red, ARG_green, ARG_blue};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_posx, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_posy, MP_ARG_INT, {.u_int = 50} },
+        { MP_QSTR_red, MP_ARG_INT, {.u_int = 20} },
+        { MP_QSTR_green, MP_ARG_INT, {.u_int = 100} },
+        { MP_QSTR_blue, MP_ARG_INT, {.u_int = 20} },
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    int posx = args[ARG_posx].u_int;
+    int posy = args[ARG_posy].u_int;
+    int red = args[ARG_red].u_int;
+    int green = args[ARG_green].u_int;
+    int blue = args[ARG_blue].u_int;
+    
+    self->sensei->drawPixel(posx, posy, red, green, blue);
+
+    return mp_const_none;
+}
+
+
+
 mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
     enum { ARG_self, ARG_r, ARG_g, ARG_b};
@@ -126,6 +248,17 @@ mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, 
     
 }
 
+mp_obj_t MeloperoSensei_set_text_font(mp_obj_t self_in, mp_obj_t font, mp_obj_t size) {
+    
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    
+      uint8_t f = mp_obj_get_int(font);
+      uint8_t s = mp_obj_get_int(size);
+    self->sensei->setTextFont((enum font_name) f,(enum font_size) s);
+
+    return mp_const_none;
+}
 
 
 mp_obj_t MeloperoSensei_set_display_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
@@ -183,6 +316,14 @@ extern mp_obj_t MeloperoSensei_update_display(mp_obj_t self_in){
     self->sensei->presentScreen();
 
     return mp_const_none;
+}
+
+extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    float temp = self->sensei->getTemperature();
+    
+    return mp_obj_new_float(temp);
 }
 
 
