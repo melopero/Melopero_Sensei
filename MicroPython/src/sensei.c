@@ -38,6 +38,8 @@ MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_read_battery_obj, MeloperoSensei_read_b
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_read_light_obj, MeloperoSensei_read_light);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_set_light_min_obj, MeloperoSensei_set_light_min);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_set_light_max_obj, MeloperoSensei_set_light_max);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_touch_init_obj, MeloperoSensei_touch_init);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_touch_obj, MeloperoSensei_get_touch);
 
 //Bindings of methods
 
@@ -65,6 +67,8 @@ STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_read_light), MP_ROM_PTR(&MeloperoSensei_read_light_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_light_min), MP_ROM_PTR(&MeloperoSensei_set_light_min_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_light_max), MP_ROM_PTR(&MeloperoSensei_set_light_max_obj) },
+    { MP_ROM_QSTR(MP_QSTR_touch_init), MP_ROM_PTR(&MeloperoSensei_touch_init_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_touch), MP_ROM_PTR(&MeloperoSensei_get_touch_obj) },
 
 };
 STATIC MP_DEFINE_CONST_DICT(MeloperoSensei_locals_dict, MeloperoSensei_locals_dict_table);

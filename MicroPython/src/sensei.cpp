@@ -468,6 +468,24 @@ extern mp_obj_t MeloperoSensei_read_light(mp_obj_t self_in){
     return mp_obj_new_int(light);
 }
 
+
+extern mp_obj_t MeloperoSensei_touch_init(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    self->sensei->touch_init();
+
+    return mp_const_none;
+}
+
+extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    uint16_t result = self->sensei->get_touch();
+    
+    return mp_obj_new_int(result);
+}
+
+
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in){
 
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);

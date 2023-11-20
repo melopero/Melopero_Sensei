@@ -16,6 +16,7 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} 
     ../../src/audio.c
     ../../src/audio_fifo.c
+    ../../src/analog.c
     ../../src/graphics.c
     ../../src/I2C.c
     ../../src/input.c
@@ -37,6 +38,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_i2c
     hardware_pwm
     hardware_spi
+    hardware_adc
 )
 
 # Enable usb output, disable uart output

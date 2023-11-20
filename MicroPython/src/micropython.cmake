@@ -16,6 +16,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/audio_fifo.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/PWM.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/SPI.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/analog.c
+${CMAKE_CURRENT_LIST_DIR}/../../C++/src/MPR121.c
 )
 
 set(MICROPY_C_HEAP_SIZE 10240)

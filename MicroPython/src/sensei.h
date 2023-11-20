@@ -69,6 +69,8 @@ extern mp_obj_t MeloperoSensei_read_battery(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_read_light(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_set_light_min(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_set_light_max(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_touch_init(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in);
 
 
 
