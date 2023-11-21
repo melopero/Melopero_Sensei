@@ -12,6 +12,7 @@ extern "C"
 #include "input.h"
 #include "audio.h"
 #include "analog.h"
+#include "MPR121.h"
 }
 
 class MeloperoSensei
@@ -74,6 +75,10 @@ public:
     uint8_t getBatteryLevel(); 
 
     float getTemperature();
+
+    //touch sensor interface
+    void touch_init();
+    uint16_t get_touch();
 
     /**** game loop ****/
 

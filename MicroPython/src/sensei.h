@@ -29,6 +29,17 @@ enum text_font
     TEXT_SANS_BOLD,
 };
 
+enum button
+{
+    JOYSTICK_UP=0, 
+    JOYSTICK_DOWN, 
+    JOYSTICK_LEFT, 
+    JOYSTICK_RIGHT,
+    JOYSTICK_CENTER,
+    BUTTON_A,
+    BUTTON_B,
+};
+
 //extern of class definition
 extern const mp_obj_type_t MeloperoSensei_type;
 
@@ -40,12 +51,26 @@ extern mp_obj_t MeloperoSensei_write_text(size_t n_args, const mp_obj_t *pos_arg
 extern mp_obj_t MeloperoSensei_draw_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_draw_fill_rect(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_draw_line(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_draw_sprite(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_set_text_font(mp_obj_t self_in, mp_obj_t font, mp_obj_t size);
 extern mp_obj_t MeloperoSensei_set_display_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_clear_screen(size_t n_args, const mp_obj_t *args);
 extern mp_obj_t MeloperoSensei_update_display(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in);
-extern mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_is_button_pressed(mp_obj_t self_in, mp_obj_t button);
+extern mp_obj_t MeloperoSensei_get_button_irq_state(mp_obj_t self_in, mp_obj_t button);
+extern mp_obj_t MeloperoSensei_get_interrupt_register(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_enable_button_interrupt(mp_obj_t self_in, mp_obj_t enable);
+extern mp_obj_t MeloperoSensei_play_note(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+extern mp_obj_t MeloperoSensei_get_button_state(mp_obj_t self_in, mp_obj_t button);
+extern mp_obj_t MeloperoSensei_read_battery(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_read_light(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_set_light_min(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_set_light_max(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_touch_init(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in);
 
-//mp_obj_t self_in, mp_obj_t x, mp_obj_t y
+
+

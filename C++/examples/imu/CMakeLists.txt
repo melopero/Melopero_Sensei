@@ -14,6 +14,7 @@ pico_sdk_init()
 
 # Tell CMake where to find the executable source file
 add_executable(${PROJECT_NAME} 
+    ../../src/analog.c
     ../../src/audio.c
     ../../src/audio_fifo.c
     ../../src/graphics.c
@@ -38,6 +39,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_i2c
     hardware_pwm
     hardware_spi
+    hardware_adc
 )
 
 # Enable usb output, disable uart output

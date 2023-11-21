@@ -21,6 +21,7 @@ MeloperoSensei::MeloperoSensei(void *buffer)
     VSENEnable(true);
     audio_init();
     analog_init();
+    
 }
 
 MeloperoSensei::~MeloperoSensei()
@@ -95,7 +96,7 @@ ButtonState MeloperoSensei::getButtonState(uint8_t button)
     return input_get_button_state(button);
 }
 
-bool isButtonPressed(uint8_t button)
+bool MeloperoSensei::isButtonPressed(uint8_t button)
 {
     return input_is_pressed(button);
 }
@@ -147,6 +148,21 @@ uint8_t MeloperoSensei::getBatteryLevel()
 float MeloperoSensei::getTemperature()
 {
     return analog_read_temperature();
+}
+
+
+/**** touch sensor ****/
+
+void MeloperoSensei::touch_init()
+{
+    MPR121_reset();
+}
+
+uint16_t MeloperoSensei::get_touch()
+{
+    uint16_t result;
+    MPR121_get_touch_status(&result);
+    return result;
 }
 
 /**** game loop ****/

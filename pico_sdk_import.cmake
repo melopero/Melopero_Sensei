@@ -3,6 +3,7 @@
 # This can be dropped into an external project to help locate this SDK
 # It should be include()ed prior to project()
 
+
 if (DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
     set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
     message("Using PICO_SDK_PATH from environment ('${PICO_SDK_PATH}')")

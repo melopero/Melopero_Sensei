@@ -1,3 +1,5 @@
+add_compile_definitions(PICO_XOSC_STARTUP_DELAY_MULTIPLIER=64)
+
 # Set minimum required version of CMake
 cmake_minimum_required(VERSION 3.12)
 
@@ -16,15 +18,16 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} 
     ../../src/audio.c
     ../../src/audio_fifo.c
+    ../../src/analog.c
     ../../src/graphics.c
     ../../src/I2C.c
     ../../src/input.c
     ../../src/io_expander.c
-    ../../src/MPR121.c
     ../../src/MeloperoSensei.cpp
     ../../src/PWM.c
     ../../src/SPI.c
     ../../src/ST7789.c
+    ../../src/MPR121.c
     touch_example.cpp
 )
 
@@ -37,6 +40,8 @@ target_link_libraries(${PROJECT_NAME}
     hardware_i2c
     hardware_pwm
     hardware_spi
+    hardware_adc
+    
 )
 
 # Enable usb output, disable uart output

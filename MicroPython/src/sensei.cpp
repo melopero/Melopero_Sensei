@@ -160,6 +160,37 @@ mp_obj_t MeloperoSensei_draw_fill_rect(size_t n_args, const mp_obj_t *pos_args, 
     return mp_const_none;
 }
 
+//playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
+mp_obj_t MeloperoSensei_play_note(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+
+    enum { ARG_self, ARG_frequency, ARG_duration, ARG_volume, ARG_sweep_dir, ARG_sweep_time};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_frequency, MP_ARG_OBJ },
+        { MP_QSTR_duration, MP_ARG_INT },
+        { MP_QSTR_volume, MP_ARG_OBJ },
+        { MP_QSTR_sweep_dir, MP_ARG_BOOL, {.u_bool = false} },
+        { MP_QSTR_sweep_time, MP_ARG_OBJ },
+     
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+
+    uint32_t duration = (uint32_t)args[ARG_duration].u_int;
+    float frequency = mp_obj_get_float(args[ARG_frequency].u_obj);
+    float volume = mp_obj_get_float(args[ARG_volume].u_obj);
+    bool sweep_direction = mp_obj_is_true(args[ARG_sweep_dir].u_obj);
+    float sweep_time = mp_obj_get_float(args[ARG_sweep_time].u_obj);
+    
+    self->sensei->playNote(frequency, duration, volume, sweep_direction, sweep_time);
+
+    return mp_const_none;
+}
+
 mp_obj_t MeloperoSensei_draw_line(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
     enum { ARG_self, ARG_startx, ARG_starty, ARG_endx, ARG_endy, ARG_red, ARG_green, ARG_blue};
@@ -220,7 +251,41 @@ mp_obj_t MeloperoSensei_draw_pixel(size_t n_args, const mp_obj_t *pos_args, mp_m
     return mp_const_none;
 }
 
+mp_obj_t MeloperoSensei_draw_sprite(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
+    enum { ARG_self, ARG_buffer, ARG_posx, ARG_posy, ARG_width, ARG_height};
+    static const mp_arg_t allowed_args[] = {
+        { MP_QSTR_, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_buffer, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_posx, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_posy, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_width, MP_ARG_INT, {.u_int = 0} },
+        { MP_QSTR_height, MP_ARG_INT, {.u_int = 0} },
+      
+    };
+    
+    mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+    mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[ARG_self].u_obj);
+
+    // Convert bytearray to uint16_t*
+    mp_buffer_info_t buf_info;
+    mp_obj_t data_obj = args[ARG_buffer].u_obj;
+    mp_get_buffer_raise(data_obj, &buf_info, MP_BUFFER_READ);
+
+    uint16_t *data_ptr = (uint16_t *)buf_info.buf;
+    uint16_t posx = args[ARG_posx].u_int;
+    uint16_t posy = args[ARG_posy].u_int;
+    uint16_t width = args[ARG_width].u_int;
+    uint16_t height = args[ARG_height].u_int;
+
+    
+    
+    self->sensei->drawSprite(data_ptr,posx,posy,width, height);
+
+    return mp_const_none;
+}
 
 mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 
@@ -256,6 +321,59 @@ mp_obj_t MeloperoSensei_set_text_font(mp_obj_t self_in, mp_obj_t font, mp_obj_t 
       uint8_t f = mp_obj_get_int(font);
       uint8_t s = mp_obj_get_int(size);
     self->sensei->setTextFont((enum font_name) f,(enum font_size) s);
+
+    return mp_const_none;
+}
+
+mp_obj_t MeloperoSensei_is_button_pressed(mp_obj_t self_in, mp_obj_t button) {
+    
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    
+    uint8_t b =(uint8_t) mp_obj_get_int(button);
+    bool result = false;
+      
+    result = self->sensei->isButtonPressed(b);
+
+    return mp_obj_new_bool(result);
+}
+
+mp_obj_t MeloperoSensei_get_button_irq_state(mp_obj_t self_in, mp_obj_t button) {
+    
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    
+    int b = mp_obj_get_int(button);
+    bool result = false;
+      
+    result = self->sensei->getButtonIRQState(b);
+
+    return mp_obj_new_bool(result);
+}
+
+
+
+
+mp_obj_t MeloperoSensei_get_button_state(mp_obj_t self_in, mp_obj_t button) {
+    
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    
+    int b = mp_obj_get_int(button);
+    
+      
+    int result = self->sensei->getButtonState(b);
+
+    return mp_obj_new_int(result);
+}
+
+mp_obj_t MeloperoSensei_enable_button_interrupt(mp_obj_t self_in, mp_obj_t enable) {
+    
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+     bool c_enable = mp_obj_is_true(enable);
+      
+    self->sensei->enableButtonInterrupt(c_enable);
 
     return mp_const_none;
 }
@@ -318,6 +436,56 @@ extern mp_obj_t MeloperoSensei_update_display(mp_obj_t self_in){
     return mp_const_none;
 }
 
+extern mp_obj_t MeloperoSensei_set_light_min(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    self->sensei->setLightMin();
+
+    return mp_const_none;
+}
+
+extern mp_obj_t MeloperoSensei_set_light_max(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    self->sensei->setLightMax();
+
+    return mp_const_none;
+}
+
+extern mp_obj_t MeloperoSensei_read_battery(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    uint8_t bat = self->sensei->getBatteryLevel();
+    
+    return mp_obj_new_int(bat);
+}
+
+extern mp_obj_t MeloperoSensei_read_light(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    uint8_t light = self->sensei->getLightLevel();
+    
+    return mp_obj_new_int(light);
+}
+
+
+extern mp_obj_t MeloperoSensei_touch_init(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    self->sensei->touch_init();
+
+    return mp_const_none;
+}
+
+extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    uint16_t result = self->sensei->get_touch();
+    
+    return mp_obj_new_int(result);
+}
+
+
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in){
 
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
@@ -327,7 +495,13 @@ extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in){
 }
 
 
+extern mp_obj_t MeloperoSensei_get_interrupt_register(mp_obj_t self_in){
 
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    uint8_t reg = self->sensei->getInputInterruptRegister();
+    
+    return mp_obj_new_int_from_uint(reg);
+}
 
 
 

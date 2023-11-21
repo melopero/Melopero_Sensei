@@ -11,12 +11,14 @@ add_executable(demo
         ../../src/PWM.c
         ../../src/audio_fifo.c
         ../../src/audio.c
+        ../../src/analog.c
         ../../src/MeloperoSensei.cpp
 )
 
 # pull in common dependencies
 target_link_libraries(demo
         pico_stdlib
+        hardware_adc
         hardware_spi
         hardware_i2c
         hardware_pwm
