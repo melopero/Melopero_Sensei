@@ -42,6 +42,6 @@ void I2C_write_reg(uint8_t address, uint8_t reg, uint8_t const *src, size_t len,
     uint8_t buf[len];
     buf[0] = reg;
     memcpy(buf + 1, src, len);
-    I2C_write(address, buf, len + 1, stop);
+    I2C_write(address, buf, len+1, stop);
     free(buf);
 }

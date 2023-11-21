@@ -87,8 +87,10 @@ void MPR121_read_reg(uint8_t reg, uint8_t *val)
 }
 
 void MPR121_write_reg(uint8_t reg, uint8_t val)
-{
-    I2C_write_reg(MPR121_I2C_DEFAULT_ADDRESS, reg, &val, 1, true);
+{   
+    const uint8_t write[] = { reg, val };
+    I2C_write(MPR121_I2C_DEFAULT_ADDRESS, write, 2, true);
+    //I2C_write_reg(MPR121_I2C_DEFAULT_ADDRESS, reg, &val, 1, true);
 }
 
 void MPR121_set_thresholds(uint8_t touch, uint8_t release)

@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "pico/stdlib.h"
+#include "stdio.h"
+//#include "pico/stdlib.h"
 #include "../../src/MeloperoSensei.hpp"
 
 extern "C"
@@ -13,12 +13,15 @@ int main()
     MeloperoSensei sensei;
    
     sensei.setTextFont(FREE_SANS_BOLD, SMALL);
-    sensei.setTextColor(0x93, 0x70, 0xDB);
-
+    sensei.setTextColor(0xFF, 0x80, 0x80);
+    //sensei.clearScreen(0x20, 0x20, 0x20);
     sensei.print(20, 100, "Init");
     sensei.presentScreen();
 
     MPR121_reset();
+
+    sensei.print(20, 140, "MPR121 is running");
+    sensei.presentScreen();
     uint8_t config2_reg_content;
     MPR121_read_reg(MPR121_CONFIG2_REGISTER, &config2_reg_content);
 
