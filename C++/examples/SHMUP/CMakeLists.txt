@@ -11,6 +11,7 @@ add_executable(SHMUP
         ../../src/PWM.c
         ../../src/audio_fifo.c
         ../../src/audio.c
+        ../../src/analog.c
         ../../src/MeloperoSensei.cpp
 )
 
@@ -20,6 +21,7 @@ target_link_libraries(SHMUP
         hardware_spi
         hardware_i2c
         hardware_pwm
+        hardware_adc
         hardware_clocks
         pico_rand
 )

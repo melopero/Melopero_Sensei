@@ -96,5 +96,6 @@ int main()
         sensei.print(100, 160, buf);
 
         sensei.presentScreen();
+        sleep_ms(500);
     }
 }

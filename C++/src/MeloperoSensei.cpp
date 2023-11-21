@@ -21,6 +21,7 @@ MeloperoSensei::MeloperoSensei(void *buffer)
     VSENEnable(true);
     audio_init();
     analog_init();
+    
 }
 
 MeloperoSensei::~MeloperoSensei()

@@ -11,11 +11,11 @@ int main()
 {
 
     MeloperoSensei sensei;
-
+   
     sensei.setTextFont(FREE_SANS_BOLD, SMALL);
     sensei.setTextColor(0x93, 0x70, 0xDB);
 
-    sensei.print(20, 100, "Initializing Touch...");
+    sensei.print(20, 100, "Init");
     sensei.presentScreen();
 
     MPR121_reset();
