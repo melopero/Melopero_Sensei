@@ -24,6 +24,24 @@ LSM6DSL::LSM6DSL()
     dev_ctx.write_reg = platform_write;
 }
 
+void LSM6DSL::reset()
+{
+    // Restore default configuration
+    uint8_t rst;
+    lsm6dsl_reset_set(&dev_ctx, PROPERTY_ENABLE);
+
+    do
+    {
+        lsm6dsl_reset_get(&dev_ctx, &rst);
+    } while (rst);
+}
+
+void LSM6DSL::setOutputDataRates(AccelerometerOutputDataRate acc_odr)
+{
+    lsm6dsl_xl_data_rate_set(&dev_ctx, LSM6DSL_XL_ODR_12Hz5);
+    lsm6dsl_gy_data_rate_set(&dev_ctx, LSM6DSL_GY_ODR_12Hz5);
+}
+
 void LSM6DSL::testSetup()
 {
     // Restore default configuration
@@ -59,6 +77,60 @@ void LSM6DSL::testSetup()
 
     /* Enable Block Data Update */
     lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
+}
+
+void LSM6DSL::setFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_ff = enable ? 1 : 0;
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_ff = enable ? 1 : 0;
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
+}
+
+void LSM6DSL::setSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_single_tap = enable ? 1 : 0;
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_single_tap = enable ? 1 : 0;
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
+}
+
+void LSM6DSL::void LSM6DSL::setDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_double_tap = enable ? 1 : 0;
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_double_tap = enable ? 1 : 0;
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
 }
 
 void LSM6DSL::updateMeasurements()
