@@ -36,10 +36,16 @@ void LSM6DSL::reset()
     } while (rst);
 }
 
-void LSM6DSL::setOutputDataRates(AccelerometerOutputDataRate acc_odr)
+void LSM6DSL::setOutputDataRates(AccelerometerOutputDataRate acc_odr, GyroscopeOutputDataRate gyro_odr)
 {
-    lsm6dsl_xl_data_rate_set(&dev_ctx, LSM6DSL_XL_ODR_12Hz5);
-    lsm6dsl_gy_data_rate_set(&dev_ctx, LSM6DSL_GY_ODR_12Hz5);
+    lsm6dsl_xl_data_rate_set(&dev_ctx, static_cast<lsm6dsl_odr_xl_t>(acc_odr));
+    lsm6dsl_gy_data_rate_set(&dev_ctx, static_cast<lsm6dsl_odr_g_t>(gyro_odr));
+}
+
+void LSM6DSL::setScales(AccelerometerScale acc_scale, GyroscopeScale gyro_scale)
+{
+    lsm6dsl_xl_full_scale_set(&dev_ctx, static_cast<lsm6dsl_fs_xl_t>(acc_scale));
+    lsm6dsl_gy_full_scale_set(&dev_ctx, static_cast<lsm6dsl_fs_g_t>(gyro_scale));
 }
 
 void LSM6DSL::testSetup()
@@ -79,7 +85,7 @@ void LSM6DSL::testSetup()
     lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
 }
 
-void LSM6DSL::setFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
+void LSM6DSL::enableFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
 {
     if (pin == LSM6DSLInterruptPin::PIN_1)
     {
@@ -97,7 +103,7 @@ void LSM6DSL::setFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
     }
 }
 
-void LSM6DSL::setSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1)
+void LSM6DSL::enableSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin)
 {
     if (pin == LSM6DSLInterruptPin::PIN_1)
     {
@@ -115,7 +121,7 @@ void LSM6DSL::setSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6D
     }
 }
 
-void LSM6DSL::void LSM6DSL::setDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1)
+void LSM6DSL::enableDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin)
 {
     if (pin == LSM6DSLInterruptPin::PIN_1)
     {
@@ -131,6 +137,40 @@ void LSM6DSL::void LSM6DSL::setDoubleTapInterrupt(bool enable, LSM6DSLInterruptP
         int2_value.int2_double_tap = enable ? 1 : 0;
         lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
     }
+}
+
+void LSM6DSL::enablePedometer(bool enable)
+{
+    // Pedometer functions work at 26 Hz, so the accelerometer ODR must be set at a value of 26 Hz or higher.
+    lsm6dsl_pedo_sens_set(&dev_ctx, enable? 1 : 0);
+}
+
+void LSM6DSL::resetStepCounter()
+{
+    lsm6dsl_pedo_step_reset_set(&dev_ctx, 1);
+    do {
+        updateStepCounter();
+    }
+    while (steps != 0);
+    // After the counter resets, the PEDO_RST_STEP bit is not automatically set back to 0.
+    // So we need to manually set it to 0.
+    lsm6dsl_pedo_step_reset_set(&dev_ctx, 0);
+}
+
+void LSM6DSL::updateStepCounter()
+{
+    uint8_t steps_buffer[2] = {0,0};
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_STEP_COUNTER_L, steps_buffer, 2);
+    steps = steps_buffer[0] | (steps_buffer[1] << 8);
+}
+
+void LSM6DSL::updateInterruptSources()
+{
+    lsm6dsl_all_sources_t int_src;
+    lsm6dsl_all_sources_get(&dev_ctx, &int_src);
+    singleTapDetected = int_src.tap_src.single_tap == 1;
+    doubleTapDetected = int_src.tap_src.double_tap == 1;
+    freeFallDetected = int_src.wake_up_src.ff_ia == 1;
 }
 
 void LSM6DSL::updateMeasurements()
