@@ -48,43 +48,6 @@ void LSM6DSL::setScales(AccelerometerScale acc_scale, GyroscopeScale gyro_scale)
     lsm6dsl_gy_full_scale_set(&dev_ctx, static_cast<lsm6dsl_fs_g_t>(gyro_scale));
 }
 
-void LSM6DSL::testSetup()
-{
-    // Restore default configuration
-    uint8_t rst;
-    lsm6dsl_reset_set(&dev_ctx, PROPERTY_ENABLE);
-
-    do
-    {
-        lsm6dsl_reset_get(&dev_ctx, &rst);
-    } while (rst);
-
-    /* Enable Block Data Update */
-    lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
-    /* Set Output Data Rate */
-    lsm6dsl_xl_data_rate_set(&dev_ctx, LSM6DSL_XL_ODR_12Hz5);
-    lsm6dsl_gy_data_rate_set(&dev_ctx, LSM6DSL_GY_ODR_12Hz5);
-    /* Set full scale */
-    lsm6dsl_xl_full_scale_set(&dev_ctx, LSM6DSL_2g);
-    lsm6dsl_gy_full_scale_set(&dev_ctx, LSM6DSL_2000dps);
-    /* Configure filtering chain(No aux interface) */
-    /* Accelerometer - analog filter */
-    lsm6dsl_xl_filter_analog_set(&dev_ctx, LSM6DSL_XL_ANA_BW_400Hz);
-    /* Accelerometer - LPF1 path ( LPF2 not used )*/
-    lsm6dsl_xl_lp1_bandwidth_set(&dev_ctx, LSM6DSL_XL_LP1_ODR_DIV_4);
-    /* Accelerometer - LPF1 + LPF2 path */
-    lsm6dsl_xl_lp2_bandwidth_set(&dev_ctx,
-                                 LSM6DSL_XL_LOW_NOISE_LP_ODR_DIV_100);
-    /* Accelerometer - High Pass / Slope path */
-    lsm6dsl_xl_reference_mode_set(&dev_ctx, PROPERTY_DISABLE);
-    lsm6dsl_xl_hp_bandwidth_set(&dev_ctx, LSM6DSL_XL_HP_ODR_DIV_100);
-    /* Gyroscope - filtering chain */
-    lsm6dsl_gy_band_pass_set(&dev_ctx, LSM6DSL_HP_260mHz_LP1_STRONG);
-
-    /* Enable Block Data Update */
-    lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
-}
-
 void LSM6DSL::enableFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
 {
     if (pin == LSM6DSLInterruptPin::PIN_1)
@@ -142,16 +105,16 @@ void LSM6DSL::enableDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin)
 void LSM6DSL::enablePedometer(bool enable)
 {
     // Pedometer functions work at 26 Hz, so the accelerometer ODR must be set at a value of 26 Hz or higher.
-    lsm6dsl_pedo_sens_set(&dev_ctx, enable? 1 : 0);
+    lsm6dsl_pedo_sens_set(&dev_ctx, enable ? 1 : 0);
 }
 
 void LSM6DSL::resetStepCounter()
 {
     lsm6dsl_pedo_step_reset_set(&dev_ctx, 1);
-    do {
+    do
+    {
         updateStepCounter();
-    }
-    while (steps != 0);
+    } while (steps != 0);
     // After the counter resets, the PEDO_RST_STEP bit is not automatically set back to 0.
     // So we need to manually set it to 0.
     lsm6dsl_pedo_step_reset_set(&dev_ctx, 0);
@@ -159,7 +122,7 @@ void LSM6DSL::resetStepCounter()
 
 void LSM6DSL::updateStepCounter()
 {
-    uint8_t steps_buffer[2] = {0,0};
+    uint8_t steps_buffer[2] = {0, 0};
     lsm6dsl_read_reg(&dev_ctx, LSM6DSL_STEP_COUNTER_L, steps_buffer, 2);
     steps = steps_buffer[0] | (steps_buffer[1] << 8);
 }

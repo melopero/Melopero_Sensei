@@ -14,7 +14,9 @@ int main()
     sensei.print(0, 0, "Initializing IMU...");
     sensei.presentScreen();
 
-    imu.testSetup();
+    imu.reset();
+    imu.setOutputDataRates(AccelerometerOutputDataRate::ODR_52Hz, GyroscopeOutputDataRate::ODR_52Hz);
+    imu.setScales(AccelerometerScale::XL_2g, GyroscopeScale::GY_2000dps);
     imu.enablePedometer(true);
     imu.resetStepCounter();
 

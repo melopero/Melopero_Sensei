@@ -16,7 +16,9 @@ int main()
     sensei.print(0, 0, "Initializing IMU...");
     sensei.presentScreen();
 
-    imu.testSetup();
+    imu.reset();
+    imu.setOutputDataRates(AccelerometerOutputDataRate::ODR_52Hz, GyroscopeOutputDataRate::ODR_52Hz);
+    imu.setScales(AccelerometerScale::XL_2g, GyroscopeScale::GY_2000dps);
 
     sensei.clearScreen(0, 0, 0);
     sensei.print(0, 0, "IMU Initalized");

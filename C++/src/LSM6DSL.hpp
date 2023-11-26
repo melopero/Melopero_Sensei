@@ -96,8 +96,6 @@ public:
     void resetStepCounter();
     void updateStepCounter();
 
-    void testSetup(); // TODO: remove
-
     void updateInterruptSources();
     void updateMeasurements();
 };
