@@ -21,7 +21,6 @@ int main()
     imu.enableSingleTapInterrupt(false);
     imu.enableDoubleTapInterrupt(false);
 
-    //imu.test();
     sensei.clearScreen(0, 0, 0);
     sensei.print(0, 0, "IMU Initalized");
     sensei.presentScreen();
@@ -39,6 +38,7 @@ int main()
 
         sensei.presentScreen();
 
-        if (imu.singleTapDetected || imu.doubleTapDetected) sleep_ms(1000);
+        if (imu.singleTapDetected || imu.doubleTapDetected)
+            sleep_ms(1000);
     }
 }
