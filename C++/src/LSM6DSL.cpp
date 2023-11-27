@@ -52,21 +52,38 @@ void LSM6DSL::enableTapDetection(bool enable)
 {
     // Enable tap recognition on all axes and ineterrupt generation
     lsm6dsl_tap_cfg_t tap_cfg;
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
     uint8_t enable_value = static_cast<uint8_t>(enable);
-    tap_cfg.interrupts_enable = enable_value;
     tap_cfg.tap_x_en = enable_value;
     tap_cfg.tap_y_en = enable_value;
     tap_cfg.tap_z_en = enable_value;
+    tap_cfg.interrupts_enable = 1;
     lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
 
     // Set tap threshold and quiet and shock time windows
     uint8_t data = 0x8C;
     lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_THS_6D, &data, 1); // Write 8Ch to TAP_THS_6D // Set tap threshold
     data = 0x7F;
-    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_INT_DUR2, &data, 1);// Write 7Fh to INT_DUR2 // Set Duration, Quiet and Shock time windows
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_INT_DUR2, &data, 1); // Write 7Fh to INT_DUR2 // Set Duration, Quiet and Shock time windows
 
     // Set tap detection mode
     lsm6dsl_tap_mode_set(&dev_ctx, LSM6DSL_BOTH_SINGLE_DOUBLE);
+}
+
+void LSM6DSL::enableFreeFallDetection(bool enable)
+{
+    lsm6dsl_tap_cfg_t tap_cfg;
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+    uint8_t enable_value = static_cast<uint8_t>(enable);
+    tap_cfg.lir = enable_value;
+    tap_cfg.interrupts_enable = 1;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+
+    uint8_t data = 0x00;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_WAKE_UP_DUR, &data, 1);// Write 00h to WAKE_UP_DUR // Set event duration (FF_DUR5 bit)
+    data = 0x33;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_FREE_FALL, &data, 1);// Write 33h to FREE_FALL // Set FF threshold (FF_THS[2:0] = 011b)
+    // Set six samples event duration (FF_DUR[5:0] = 000110b)
 }
 
 void LSM6DSL::enableFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
