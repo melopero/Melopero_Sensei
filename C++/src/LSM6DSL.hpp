@@ -88,6 +88,7 @@ public:
     void setScales(AccelerometerScale acc_scale, GyroscopeScale gyro_scale);
     // TODO: filters
     // TODO: threshold settings for interrupts
+    void enableTapDetection(bool enable);
     void enableFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1);
     void enableSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1);
     void enableDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin = LSM6DSLInterruptPin::PIN_1);
