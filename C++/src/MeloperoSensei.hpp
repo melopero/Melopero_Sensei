@@ -13,6 +13,7 @@ extern "C"
 #include "audio.h"
 #include "analog.h"
 #include "MPR121.h"
+#include "LSM6DSL.hpp"
 }
 
 class MeloperoSensei
@@ -31,7 +32,7 @@ public:
     void presentScreen();
 
     void drawPixel(uint16_t x, uint16_t y, uint8_t red, uint8_t green, uint8_t blue);
-    
+
     void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint8_t red, uint8_t green, uint8_t blue);
 
     void drawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t red, uint8_t green, uint8_t blue);
@@ -64,21 +65,26 @@ public:
 
     void playNote(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time);
 
-    /**** analog interface ****/  
+    /**** analog interface ****/
 
     void setLightMin();
 
     void setLightMax();
-    
+
     uint8_t getLightLevel();
-    
-    uint8_t getBatteryLevel(); 
+
+    uint8_t getBatteryLevel();
 
     float getTemperature();
 
-    //touch sensor interface
+    /**** touch sensor interface ****/
+
     void touch_init();
+
     uint16_t get_touch();
+
+    /**** imu sensor interface ****/
+     
 
     /**** game loop ****/
 
@@ -91,7 +97,6 @@ public:
     void run();
 
 private:
-
     static const uint8_t SPI1_MOSI{11};
     static const uint8_t SPI1_MISO{8};
     static const uint8_t SPI1_SCK{10};
@@ -102,7 +107,7 @@ private:
 
     static const uint8_t I2C1_SDA{6};
     static const uint8_t I2C1_SCL{7};
-    static const uint32_t I2C1_FREQUENCY{100000};    
+    static const uint32_t I2C1_FREQUENCY{100000};
     void I2C1Init();
 
     static const uint8_t VSEN_PIN{17};
@@ -113,4 +118,4 @@ private:
     bool graphicsMP = false;
 };
 
-#endif  // MELOPEROSENSEI_H
+#endif // MELOPEROSENSEI_H
