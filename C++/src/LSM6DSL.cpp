@@ -80,9 +80,9 @@ void LSM6DSL::enableFreeFallDetection(bool enable)
     lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
 
     uint8_t data = 0x00;
-    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_WAKE_UP_DUR, &data, 1);// Write 00h to WAKE_UP_DUR // Set event duration (FF_DUR5 bit)
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_WAKE_UP_DUR, &data, 1); // Write 00h to WAKE_UP_DUR // Set event duration (FF_DUR5 bit)
     data = 0x33;
-    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_FREE_FALL, &data, 1);// Write 33h to FREE_FALL // Set FF threshold (FF_THS[2:0] = 011b)
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_FREE_FALL, &data, 1); // Write 33h to FREE_FALL // Set FF threshold (FF_THS[2:0] = 011b)
     // Set six samples event duration (FF_DUR[5:0] = 000110b)
 }
 
