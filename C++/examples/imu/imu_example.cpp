@@ -1,24 +1,18 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "../../src/MeloperoSensei.hpp"
-#include "../../src/LSM6DSL.hpp"
 
 int main()
 {
 
     MeloperoSensei sensei;
-    LSM6DSL imu;
-    char acc_msg[128];
-    char gyro_msg[128];
-    char temp_msg[128];
+    char msg[128];
 
     sensei.setTextFont(FREE_MONO, SMALL);
     sensei.print(0, 0, "Initializing IMU...");
     sensei.presentScreen();
 
-    imu.reset();
-    imu.setOutputDataRates(AccelerometerOutputDataRate::ODR_52Hz, GyroscopeOutputDataRate::ODR_52Hz);
-    imu.setScales(AccelerometerScale::XL_2g, GyroscopeScale::GY_2000dps);
+    sensei.imuInit();
 
     sensei.clearScreen(0, 0, 0);
     sensei.print(0, 0, "IMU Initalized");
@@ -27,17 +21,15 @@ int main()
     // Loop forever
     while (true)
     {
-
-        imu.updateMeasurements();
         sensei.clearScreen(0, 0, 0);
 
-        sprintf(acc_msg, "x: %.2f  y: %.2f  z: %.2f", imu.acceleration_mg[0], imu.acceleration_mg[1], imu.acceleration_mg[2]);
-        sprintf(gyro_msg, "x: %.2f  y: %.2f  z: %.2f", imu.angular_rate_mdps[0], imu.angular_rate_mdps[1], imu.angular_rate_mdps[2]);
-        sprintf(temp_msg, "t: %.2f", imu.temperature_degC);
+        float* acceleration_mg = sensei.imuGetAccelerationMg();
+        sprintf(msg, "x: %.2f  y: %.2f  z: %.2f", acceleration_mg[0], acceleration_mg[1], acceleration_mg[2]);
+        sensei.print(0, 20, msg);
 
-        sensei.print(0, 20, acc_msg);
-        sensei.print(0, 100, gyro_msg);
-        sensei.print(0, 180, temp_msg);
+        float* angular_rate_mdps = sensei.imuGetAngularRateMdps();
+        sprintf(msg, "x: %.2f  y: %.2f  z: %.2f", angular_rate_mdps[0], angular_rate_mdps[1], angular_rate_mdps[2]);
+        sensei.print(0, 100, msg);
 
         sensei.presentScreen();
     }

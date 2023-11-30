@@ -1,25 +1,18 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "../../src/MeloperoSensei.hpp"
-#include "../../src/LSM6DSL.hpp"
 
 int main()
 {
 
     MeloperoSensei sensei;
-    LSM6DSL imu;
     char msg[128];
 
     sensei.setTextFont(FREE_MONO, SMALL);
     sensei.print(0, 0, "Initializing IMU...");
     sensei.presentScreen();
 
-    imu.reset();
-    imu.setOutputDataRates(AccelerometerOutputDataRate::ODR_416Hz, GyroscopeOutputDataRate::ODR_416Hz);
-    imu.setScales(AccelerometerScale::XL_2g, GyroscopeScale::GY_2000dps);
-    imu.enableTapDetection(true);
-    imu.enableSingleTapInterrupt(false);
-    imu.enableDoubleTapInterrupt(false);
+    sensei.imuInit();
 
     sensei.clearScreen(0, 0, 0);
     sensei.print(0, 0, "IMU Initalized");
@@ -27,18 +20,19 @@ int main()
 
     while (true)
     {
-
-        imu.updateInterruptSources();
         sensei.clearScreen(0, 0, 0);
 
-        sprintf(msg, "Single Tap: %d", imu.singleTapDetected);
+        bool singleTapDetected = sensei.imuGetSingleTapDetected();
+        sprintf(msg, "Single Tap: %d", singleTapDetected);
         sensei.print(0, 20, msg);
-        sprintf(msg, "Double Tap: %d", imu.doubleTapDetected);
+
+        bool doubleTapDetected = sensei.imuGetDoubleTapDetected();
+        sprintf(msg, "Double Tap: %d", doubleTapDetected);
         sensei.print(0, 40, msg);
 
         sensei.presentScreen();
 
-        if (imu.singleTapDetected || imu.doubleTapDetected)
+        if (singleTapDetected || doubleTapDetected)
             sleep_ms(1000);
     }
 }
