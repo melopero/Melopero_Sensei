@@ -84,7 +84,26 @@ public:
     uint16_t get_touch();
 
     /**** imu sensor interface ****/
-     
+
+    void imuInit();
+    void imuSetOutputDataRates(AccelerometerOutputDataRate acc_odr, GyroscopeOutputDataRate gyro_odr);
+    void imuSetScales(AccelerometerScale acc_scale, GyroscopeScale);
+    void imuReset();
+
+    void imuEnableTapDetection(bool enable);
+    void imuEnableFreeFallDetection(bool enable);
+    void imuEnableInterrupts(bool enable_single_tap_interrupt, bool enable_double_tap_interrupt, bool enable_free_fall_interrupt);
+
+    void imuEnablePedometer(bool enable);
+    void imuResetStepCounter();
+    uint16_t imuGetSteps();
+
+    bool imuGetFreeFallDetected();
+    bool imuGetSingleTapDetected();
+    bool imuGetDoubleTapDetected();
+
+    float* imuGetAccelerationMg();
+    float* imuGetAngularRateMdps();
 
     /**** game loop ****/
 
@@ -116,6 +135,8 @@ private:
     void render();
 
     bool graphicsMP = false;
+
+    LSM6DSL imu;
 };
 
 #endif // MELOPEROSENSEI_H
