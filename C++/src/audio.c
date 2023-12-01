@@ -20,6 +20,11 @@ void audio_init(void)
     FIFO_init();
 }
 
+void audio_deinit()
+{
+    PWM_deinit();
+}
+
 static note n = {0.0f, 0.0f, 0.0f, false, 0.0f, 0};
 
 void audio_play_note(float frequency, uint32_t duration, float volume, bool sweep_direction, float sweep_time)

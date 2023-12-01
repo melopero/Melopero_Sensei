@@ -19,6 +19,17 @@ void I2C_init(i2c_config *config_)
     i2c_init(config.instance, config.frequency);
 }
 
+void I2C_deinit()
+{
+    i2c_deinit(config.instance);
+
+    gpio_set_function(config.SDA, GPIO_FUNC_NULL);
+    gpio_set_function(config.SCL, GPIO_FUNC_NULL);
+
+    gpio_disable_pulls(config.SDA);
+    gpio_disable_pulls(config.SCL);
+}
+
 void I2C_write(uint8_t address, uint8_t const *src, size_t len, bool stop)
 {
     i2c_write_blocking(config.instance, address, src, len, !stop);

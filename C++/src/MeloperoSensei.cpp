@@ -27,6 +27,11 @@ MeloperoSensei::~MeloperoSensei()
 {
     if (!graphicsMP)
         graphics_deinit();
+
+    audio_deinit();
+    VSENEnable(false);
+    I2C_deinit();
+    SPI_deinit();
 }
 
 /**** graphics interface ****/

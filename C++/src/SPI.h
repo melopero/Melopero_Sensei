@@ -20,6 +20,7 @@ typedef struct spi_config_t
 } spi_config;
 
 void SPI_init(spi_config *config);
+void SPI_deinit();
 void SPI_write(uint8_t *data, uint32_t len);
 
 #endif // SPI_H

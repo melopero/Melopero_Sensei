@@ -21,6 +21,15 @@ void SPI_init(spi_config *config_)
     spi_init(config.instance, config.frequency);
 }
 
+void I2C_deinit()
+{
+    spi_deinit(config.instance);
+
+    gpio_set_function(config.mosi, GPIO_FUNC_NULL);
+    gpio_set_function(config.miso, GPIO_FUNC_NULL);
+    gpio_set_function(config.sck, GPIO_FUNC_NULL);
+}
+
 void SPI_write(uint8_t *data, uint32_t len)
 {
     gpio_put(config.cs, 0);

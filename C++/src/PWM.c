@@ -29,6 +29,11 @@ void PWM_init(PWM_config *config_)
     pwm_set_enabled(config.slice, true);
 }
 
+void PWM_deinit()
+{
+    pwm_set_enabled(config.slice, false);
+}
+
 // set PWM clock divider for one slice (frequency)
 void PWM_set_frequency(float value)
 {
