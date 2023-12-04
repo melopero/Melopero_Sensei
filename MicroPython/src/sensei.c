@@ -118,6 +118,7 @@ STATIC const mp_map_elem_t melopero_sensei_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_JOYSTICK_CENTER), MP_ROM_INT(JOYSTICK_CENTER) },
     { MP_ROM_QSTR(MP_QSTR_BUTTON_A), MP_ROM_INT(BUTTON_A) },
     { MP_ROM_QSTR(MP_QSTR_BUTTON_B), MP_ROM_INT(BUTTON_B) },
+   
 
 };
 STATIC MP_DEFINE_CONST_DICT(mp_module_melopero_sensei_globals, melopero_sensei_globals_table);
