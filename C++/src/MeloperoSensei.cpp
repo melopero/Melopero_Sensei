@@ -165,6 +165,99 @@ uint16_t MeloperoSensei::get_touch()
     return result;
 }
 
+/**** imu sensor ****/
+
+void MeloperoSensei::imuInit()
+{
+    imuReset();
+    imuSetOutputDataRates(AccelerometerOutputDataRate::ODR_416Hz, GyroscopeOutputDataRate::ODR_416Hz);
+    imuSetScales(AccelerometerScale::XL_2g, GyroscopeScale::GY_2000dps);
+    imuEnablePedometer(true);
+    imuResetStepCounter();
+    imuEnableTapDetection(true);
+    imuEnableFreeFallDetection(true);
+    imuEnableInterrupts(false, false, false);
+}
+
+void MeloperoSensei::imuReset()
+{
+    imu.reset();
+}
+
+void MeloperoSensei::imuSetOutputDataRates(AccelerometerOutputDataRate acc_odr, GyroscopeOutputDataRate gyro_odr)
+{
+    imu.setOutputDataRates(acc_odr, gyro_odr);
+}
+
+void MeloperoSensei::imuSetScales(AccelerometerScale acc_scale, GyroscopeScale gyro_scale)
+{
+    imu.setScales(acc_scale, gyro_scale);
+}
+
+void MeloperoSensei::imuEnableTapDetection(bool enable)
+{
+    imu.enableTapDetection(enable);
+}
+
+void MeloperoSensei::imuEnableFreeFallDetection(bool enable)
+{
+    imu.enableFreeFallDetection(enable);
+}
+
+void MeloperoSensei::imuEnableInterrupts(bool enable_single_tap_interrupt, bool enable_double_tap_interrupt, bool enable_free_fall_interrupt)
+{
+    imu.enableSingleTapInterrupt(enable_single_tap_interrupt);
+    imu.enableDoubleTapInterrupt(enable_double_tap_interrupt);
+    imu.enableFreeFallInterrupt(enable_free_fall_interrupt);
+}
+
+void MeloperoSensei::imuEnablePedometer(bool enable)
+{
+    imu.enablePedometer(enable);
+}
+
+void MeloperoSensei::imuResetStepCounter()
+{
+    imu.resetStepCounter();
+}
+
+uint16_t MeloperoSensei::imuGetSteps()
+{
+    imu.updateStepCounter();
+    return imu.steps;
+}
+
+bool MeloperoSensei::imuGetFreeFallDetected()
+{
+    imu.updateInterruptSources();
+    return imu.freeFallDetected;
+}
+
+bool MeloperoSensei::imuGetSingleTapDetected()
+{
+    imu.updateInterruptSources();
+    return imu.singleTapDetected;
+}
+
+bool MeloperoSensei::imuGetDoubleTapDetected()
+{
+    imu.updateInterruptSources();
+    return imu.doubleTapDetected;
+}
+
+float* MeloperoSensei::imuGetAccelerationMg()
+{
+    imu.updateMeasurements();
+    return imu.acceleration_mg;
+}
+
+float* MeloperoSensei::imuGetAngularRateMdps()
+{
+    imu.updateMeasurements();
+    return imu.angular_rate_mdps;
+}
+
+
 /**** game loop ****/
 
 void MeloperoSensei::run()

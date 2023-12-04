@@ -2669,26 +2669,28 @@ int32_t lsm6dsl_pin_int1_route_set(stmdev_ctx_t *ctx,
   {
     ret = lsm6dsl_read_reg(ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
 
-    if ((val.int1_6d != 0x00U) ||
-        (val.int1_ff != 0x00U) ||
-        (val.int1_wu != 0x00U) ||
-        (val.int1_single_tap != 0x00U) ||
-        (val.int1_double_tap != 0x00U) ||
-        (val.int1_inact_state != 0x00U) ||
-        (md2_cfg.int2_6d != 0x00U) ||
-        (md2_cfg.int2_ff != 0x00U) ||
-        (md2_cfg.int2_wu != 0x00U) ||
-        (md2_cfg.int2_single_tap != 0x00U) ||
-        (md2_cfg.int2_double_tap != 0x00U) ||
-        (md2_cfg.int2_inact_state != 0x00U))
-    {
-      tap_cfg.interrupts_enable = PROPERTY_ENABLE;
-    }
+    // if ((val.int1_6d != 0x00U) ||
+    //     (val.int1_ff != 0x00U) ||
+    //     (val.int1_wu != 0x00U) ||
+    //     (val.int1_single_tap != 0x00U) ||
+    //     (val.int1_double_tap != 0x00U) ||
+    //     (val.int1_inact_state != 0x00U) ||
+    //     (md2_cfg.int2_6d != 0x00U) ||
+    //     (md2_cfg.int2_ff != 0x00U) ||
+    //     (md2_cfg.int2_wu != 0x00U) ||
+    //     (md2_cfg.int2_single_tap != 0x00U) ||
+    //     (md2_cfg.int2_double_tap != 0x00U) ||
+    //     (md2_cfg.int2_inact_state != 0x00U))
+    // {
+    //   tap_cfg.interrupts_enable = PROPERTY_ENABLE;
+    // }
 
-    else
-    {
-      tap_cfg.interrupts_enable = PROPERTY_DISABLE;
-    }
+    // else
+    // {
+    //   tap_cfg.interrupts_enable = PROPERTY_DISABLE;
+    // }
+    // Why should we disable tap detection if no interrupt are routed to the int1 or int2 pin?
+    tap_cfg.interrupts_enable = PROPERTY_ENABLE;
   }
 
   if (ret == 0)

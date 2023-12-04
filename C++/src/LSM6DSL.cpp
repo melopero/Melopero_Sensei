@@ -24,7 +24,7 @@ LSM6DSL::LSM6DSL()
     dev_ctx.write_reg = platform_write;
 }
 
-void LSM6DSL::testSetup()
+void LSM6DSL::reset()
 {
     // Restore default configuration
     uint8_t rst;
@@ -34,31 +34,144 @@ void LSM6DSL::testSetup()
     {
         lsm6dsl_reset_get(&dev_ctx, &rst);
     } while (rst);
+}
 
-    /* Enable Block Data Update */
-    lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
-    /* Set Output Data Rate */
-    lsm6dsl_xl_data_rate_set(&dev_ctx, LSM6DSL_XL_ODR_12Hz5);
-    lsm6dsl_gy_data_rate_set(&dev_ctx, LSM6DSL_GY_ODR_12Hz5);
-    /* Set full scale */
-    lsm6dsl_xl_full_scale_set(&dev_ctx, LSM6DSL_2g);
-    lsm6dsl_gy_full_scale_set(&dev_ctx, LSM6DSL_2000dps);
-    /* Configure filtering chain(No aux interface) */
-    /* Accelerometer - analog filter */
-    lsm6dsl_xl_filter_analog_set(&dev_ctx, LSM6DSL_XL_ANA_BW_400Hz);
-    /* Accelerometer - LPF1 path ( LPF2 not used )*/
-    lsm6dsl_xl_lp1_bandwidth_set(&dev_ctx, LSM6DSL_XL_LP1_ODR_DIV_4);
-    /* Accelerometer - LPF1 + LPF2 path */
-    lsm6dsl_xl_lp2_bandwidth_set(&dev_ctx,
-                                 LSM6DSL_XL_LOW_NOISE_LP_ODR_DIV_100);
-    /* Accelerometer - High Pass / Slope path */
-    lsm6dsl_xl_reference_mode_set(&dev_ctx, PROPERTY_DISABLE);
-    lsm6dsl_xl_hp_bandwidth_set(&dev_ctx, LSM6DSL_XL_HP_ODR_DIV_100);
-    /* Gyroscope - filtering chain */
-    lsm6dsl_gy_band_pass_set(&dev_ctx, LSM6DSL_HP_260mHz_LP1_STRONG);
+void LSM6DSL::setOutputDataRates(AccelerometerOutputDataRate acc_odr, GyroscopeOutputDataRate gyro_odr)
+{
+    lsm6dsl_xl_data_rate_set(&dev_ctx, static_cast<lsm6dsl_odr_xl_t>(acc_odr));
+    lsm6dsl_gy_data_rate_set(&dev_ctx, static_cast<lsm6dsl_odr_g_t>(gyro_odr));
+}
 
-    /* Enable Block Data Update */
-    lsm6dsl_block_data_update_set(&dev_ctx, PROPERTY_ENABLE);
+void LSM6DSL::setScales(AccelerometerScale acc_scale, GyroscopeScale gyro_scale)
+{
+    lsm6dsl_xl_full_scale_set(&dev_ctx, static_cast<lsm6dsl_fs_xl_t>(acc_scale));
+    lsm6dsl_gy_full_scale_set(&dev_ctx, static_cast<lsm6dsl_fs_g_t>(gyro_scale));
+}
+
+void LSM6DSL::enableTapDetection(bool enable)
+{
+    // Enable tap recognition on all axes and ineterrupt generation
+    lsm6dsl_tap_cfg_t tap_cfg;
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+    uint8_t enable_value = static_cast<uint8_t>(enable);
+    tap_cfg.tap_x_en = enable_value;
+    tap_cfg.tap_y_en = enable_value;
+    tap_cfg.tap_z_en = enable_value;
+    tap_cfg.interrupts_enable = 1;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+
+    // Set tap threshold and quiet and shock time windows
+    uint8_t data = 0x8C;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_THS_6D, &data, 1); // Write 8Ch to TAP_THS_6D // Set tap threshold
+    data = 0x7F;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_INT_DUR2, &data, 1); // Write 7Fh to INT_DUR2 // Set Duration, Quiet and Shock time windows
+
+    // Set tap detection mode
+    lsm6dsl_tap_mode_set(&dev_ctx, LSM6DSL_BOTH_SINGLE_DOUBLE);
+}
+
+void LSM6DSL::enableFreeFallDetection(bool enable)
+{
+    lsm6dsl_tap_cfg_t tap_cfg;
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+    uint8_t enable_value = static_cast<uint8_t>(enable);
+    tap_cfg.lir = enable_value;
+    tap_cfg.interrupts_enable = 1;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_TAP_CFG, (uint8_t *)&tap_cfg, 1);
+
+    uint8_t data = 0x00;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_WAKE_UP_DUR, &data, 1); // Write 00h to WAKE_UP_DUR // Set event duration (FF_DUR5 bit)
+    data = 0x33;
+    lsm6dsl_write_reg(&dev_ctx, LSM6DSL_FREE_FALL, &data, 1); // Write 33h to FREE_FALL // Set FF threshold (FF_THS[2:0] = 011b)
+    // Set six samples event duration (FF_DUR[5:0] = 000110b)
+}
+
+void LSM6DSL::enableFreeFallInterrupt(bool enable, LSM6DSLInterruptPin pin)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_ff = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_ff = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
+}
+
+void LSM6DSL::enableSingleTapInterrupt(bool enable, LSM6DSLInterruptPin pin)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_single_tap = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_single_tap = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
+}
+
+void LSM6DSL::enableDoubleTapInterrupt(bool enable, LSM6DSLInterruptPin pin)
+{
+    if (pin == LSM6DSLInterruptPin::PIN_1)
+    {
+        lsm6dsl_int1_route_t int1_value;
+        lsm6dsl_pin_int1_route_get(&dev_ctx, &int1_value);
+        int1_value.int1_double_tap = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int1_route_set(&dev_ctx, int1_value);
+    }
+    else
+    {
+        lsm6dsl_int2_route_t int2_value;
+        lsm6dsl_pin_int2_route_get(&dev_ctx, &int2_value);
+        int2_value.int2_double_tap = static_cast<uint8_t>(enable);
+        lsm6dsl_pin_int2_route_set(&dev_ctx, int2_value);
+    }
+}
+
+void LSM6DSL::enablePedometer(bool enable)
+{
+    // Pedometer functions work at 26 Hz, so the accelerometer ODR must be set at a value of 26 Hz or higher.
+    lsm6dsl_pedo_sens_set(&dev_ctx, enable ? 1 : 0);
+}
+
+void LSM6DSL::resetStepCounter()
+{
+    lsm6dsl_pedo_step_reset_set(&dev_ctx, 1);
+    do
+    {
+        updateStepCounter();
+    } while (steps != 0);
+    // After the counter resets, the PEDO_RST_STEP bit is not automatically set back to 0.
+    // So we need to manually set it to 0.
+    lsm6dsl_pedo_step_reset_set(&dev_ctx, 0);
+}
+
+void LSM6DSL::updateStepCounter()
+{
+    uint8_t steps_buffer[2] = {0, 0};
+    lsm6dsl_read_reg(&dev_ctx, LSM6DSL_STEP_COUNTER_L, steps_buffer, 2);
+    steps = steps_buffer[0] | (steps_buffer[1] << 8);
+}
+
+void LSM6DSL::updateInterruptSources()
+{
+    lsm6dsl_all_sources_t int_src;
+    lsm6dsl_all_sources_get(&dev_ctx, &int_src);
+    singleTapDetected = int_src.tap_src.single_tap == 1;
+    doubleTapDetected = int_src.tap_src.double_tap == 1;
+    freeFallDetected = int_src.wake_up_src.ff_ia == 1;
 }
 
 void LSM6DSL::updateMeasurements()
