@@ -13,6 +13,7 @@ add_executable(exercise
         ../../src/audio.c
         ../../src/analog.c
         ../../src/MeloperoSensei.cpp
+        ../../src/LSM6DSL.cpp
 )
 
 # pull in common dependencies
