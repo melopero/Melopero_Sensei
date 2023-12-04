@@ -12,7 +12,7 @@ Create a new Sensei object
 `update_display()`
 This function is crucial to make the changes applied to the display effective. It should be called last after making the modifications you want to be displayed on the screen, including clearing the display.
 
-`clear_display()`
+`clear_screen()`
 Clear all the display shutting down all the pixels.
 After this function remember to call update_display()
 
