@@ -62,7 +62,7 @@ void MeloperoSensei::drawFillRect(uint16_t x, uint16_t y, uint16_t width, uint16
     graphics_draw_fill_rect(x, y, width, height, red, green, blue);
 }
 
-void MeloperoSensei::drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency /*= 0xE037 */)
+void MeloperoSensei::drawSprite(const uint16_t sprite[], int x, int y, uint16_t width, uint16_t height, uint16_t transparency )
 {
     graphics_draw_sprite(sprite, x, y, width, height, transparency);
 }
@@ -98,7 +98,8 @@ ButtonState MeloperoSensei::getButtonState(uint8_t button)
 
 bool MeloperoSensei::isButtonPressed(uint8_t button)
 {
-    return input_is_pressed(button);
+    //return input_is_pressed(button);
+    return input_get_button(button);
 }
 
 void MeloperoSensei::enableButtonInterrupt(bool enable)

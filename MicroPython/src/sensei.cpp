@@ -408,7 +408,7 @@ mp_obj_t MeloperoSensei_set_display_color(size_t n_args, const mp_obj_t *pos_arg
 
 
 
-mp_obj_t MeloperoSensei_clear_screen(size_t n_args, const mp_obj_t *args) {
+mp_obj_t MeloperoSensei_clear_display(size_t n_args, const mp_obj_t *args) {
 
   
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(args[0]);
