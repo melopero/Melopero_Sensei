@@ -18,7 +18,7 @@ First release November 2023
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei___del___obj, MeloperoSensei___del__);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_set_text_color_obj, 1, MeloperoSensei_set_text_color);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_set_display_color_obj, 1, MeloperoSensei_set_display_color);
-MP_DEFINE_CONST_FUN_OBJ_VAR(MeloperoSensei_clear_screen_obj, 1, MeloperoSensei_clear_screen);
+MP_DEFINE_CONST_FUN_OBJ_VAR(MeloperoSensei_clear_display_obj, 1, MeloperoSensei_clear_display);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_write_text_obj, 1, MeloperoSensei_write_text);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_update_display_obj, MeloperoSensei_update_display);
 MP_DEFINE_CONST_FUN_OBJ_KW(MeloperoSensei_draw_rect_obj, 1, MeloperoSensei_draw_rect);
@@ -48,7 +48,7 @@ STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR___del__), MP_ROM_PTR(&MeloperoSensei___del___obj) },
     { MP_ROM_QSTR(MP_QSTR_update_display), MP_ROM_PTR(&MeloperoSensei_update_display_obj) },
     { MP_ROM_QSTR(MP_QSTR_get_cpu_temp), MP_ROM_PTR(&MeloperoSensei_get_cpu_temp_obj) },
-    { MP_ROM_QSTR(MP_QSTR_clear_screen), MP_ROM_PTR(&MeloperoSensei_clear_screen_obj) },
+    { MP_ROM_QSTR(MP_QSTR_clear_display), MP_ROM_PTR(&MeloperoSensei_clear_display_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_text_color), MP_ROM_PTR(&MeloperoSensei_set_text_color_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_text_font), MP_ROM_PTR(&MeloperoSensei_set_text_font_obj) },
     { MP_ROM_QSTR(MP_QSTR_set_display_color), MP_ROM_PTR(&MeloperoSensei_set_display_color_obj) },

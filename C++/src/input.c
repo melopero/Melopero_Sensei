@@ -5,7 +5,7 @@
 #define INT_PIN    4
 
 extern void gpio_irq_callback(uint gpio, uint32_t event_mask);
-static bool input_get_button(uint8_t button);
+//static bool input_get_button(uint8_t button);
 
 void input_init(void)
 {

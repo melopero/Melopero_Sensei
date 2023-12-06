@@ -22,6 +22,7 @@ typedef enum ButtonState
 void input_init(void);
 ButtonState input_get_button_state(uint8_t button);
 bool input_is_pressed(uint8_t button);
+bool input_get_button(uint8_t button);
 uint8_t input_get_interrupt_register();
 bool input_get_button_irq_state(uint8_t button);
 void input_enable_interrupt(bool enable);

@@ -31,13 +31,13 @@ enum text_font
 
 enum button
 {
-    JOYSTICK_UP=0, 
-    JOYSTICK_DOWN, 
-    JOYSTICK_LEFT, 
-    JOYSTICK_RIGHT,
-    JOYSTICK_CENTER,
-    BUTTON_A,
-    BUTTON_B,
+    JOYSTICK_UP=(1<<1), 
+    JOYSTICK_DOWN=(1<<2), 
+    JOYSTICK_LEFT=(1<<3), 
+    JOYSTICK_RIGHT=(1<<4),
+    JOYSTICK_CENTER=(1<<5),
+    BUTTON_A=(1<<7),
+    BUTTON_B=(1<<6),
 };
 
 //extern of class definition
@@ -56,7 +56,7 @@ extern mp_obj_t MeloperoSensei_draw_sprite(size_t n_args, const mp_obj_t *pos_ar
 extern mp_obj_t MeloperoSensei_set_text_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
 extern mp_obj_t MeloperoSensei_set_text_font(mp_obj_t self_in, mp_obj_t font, mp_obj_t size);
 extern mp_obj_t MeloperoSensei_set_display_color(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
-extern mp_obj_t MeloperoSensei_clear_screen(size_t n_args, const mp_obj_t *args);
+extern mp_obj_t MeloperoSensei_clear_display(size_t n_args, const mp_obj_t *args);
 extern mp_obj_t MeloperoSensei_update_display(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_is_button_pressed(mp_obj_t self_in, mp_obj_t button);
