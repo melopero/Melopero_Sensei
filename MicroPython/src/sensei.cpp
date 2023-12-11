@@ -481,8 +481,27 @@ extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in){
 
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
     uint16_t result = self->sensei->get_touch();
-    
-    return mp_obj_new_int(result);
+   
+    mp_obj_t result_obj = mp_obj_new_int(result);
+
+    // Convert the result to an 16-bit binary string with left zero-padding
+    char binary_result[16];  
+    mp_int_t result_value = mp_obj_get_int(result_obj);
+
+    for (int i = 0; i < 16; ++i) {
+        binary_result[i] = ((result_value >> i) & 1) ? '1' : '0';
+    }
+
+    // Create a tuple of 12 bits representing the 12 electrodes
+    mp_obj_t bits_tuple[12];
+
+    for (int i = 0; i < 12; ++i) {
+        bits_tuple[i] = MP_OBJ_NEW_SMALL_INT(binary_result[i] - '0');
+    }
+
+    mp_obj_t tuple_result = mp_obj_new_tuple(12, bits_tuple);
+
+    return tuple_result;
 }
 
 
