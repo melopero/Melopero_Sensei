@@ -455,17 +455,19 @@ extern mp_obj_t MeloperoSensei_set_light_max(mp_obj_t self_in){
 extern mp_obj_t MeloperoSensei_read_battery(mp_obj_t self_in){
 
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
-    uint8_t bat = self->sensei->getBatteryLevel();
     
-    return mp_obj_new_int(bat);
+    float bat = self->sensei->getBatteryLevel();
+    
+    return mp_obj_new_float(bat);
+  
 }
 
 extern mp_obj_t MeloperoSensei_read_light(mp_obj_t self_in){
 
     _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
-    uint8_t light = self->sensei->getLightLevel();
+    float light = self->sensei->getLightLevel();
     
-    return mp_obj_new_int(light);
+    return mp_obj_new_float(light);
 }
 
 
@@ -503,6 +505,145 @@ extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in){
 
     return tuple_result;
 }
+
+
+
+extern mp_obj_t MeloperoSensei_imu_init(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    self->sensei->imuInit();
+
+    return mp_const_none;   
+
+}
+
+
+extern mp_obj_t MeloperoSensei_get_acceleration(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    float* acceleration = self->sensei->imuGetAccelerationMg();
+
+    mp_obj_tuple_t *tuple = (mp_obj_tuple_t *) mp_obj_new_tuple(3, NULL);
+
+    
+    tuple->items[0] = mp_obj_new_float(acceleration[0]);
+    tuple->items[1] = mp_obj_new_float(acceleration[1]);
+    tuple->items[2] = mp_obj_new_float(acceleration[2]);
+
+    return MP_OBJ_FROM_PTR(tuple);
+
+}
+
+extern mp_obj_t MeloperoSensei_get_rotation(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    float* rotation = self->sensei->imuGetAngularRateMdps();
+
+    mp_obj_tuple_t *tuple = (mp_obj_tuple_t *) mp_obj_new_tuple(3, NULL);
+
+    
+    tuple->items[0] = mp_obj_new_float(rotation[0]);
+    tuple->items[1] = mp_obj_new_float(rotation[1]);
+    tuple->items[2] = mp_obj_new_float(rotation[2]);
+
+    return MP_OBJ_FROM_PTR(tuple);
+
+}
+
+extern mp_obj_t MeloperoSensei_get_freefall(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    bool freefall = self->sensei->imuGetFreeFallDetected();
+
+    return mp_obj_new_bool(freefall);
+
+}
+
+extern mp_obj_t MeloperoSensei_get_single_tap(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    bool single_tap = self->sensei->imuGetSingleTapDetected();
+
+    return mp_obj_new_bool(single_tap);
+
+}
+
+extern mp_obj_t MeloperoSensei_get_double_tap(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    bool double_tap = self->sensei->imuGetDoubleTapDetected();
+
+    return mp_obj_new_bool(double_tap);
+
+}
+
+
+extern mp_obj_t MeloperoSensei_get_imu_event(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+    
+    bool* boolArray = self->sensei->imuGetEvents();
+
+    mp_obj_tuple_t *tuple = (mp_obj_tuple_t *) mp_obj_new_tuple(3, NULL);
+
+    // Set boolean values in the tuple
+    tuple->items[0] = mp_obj_new_bool(boolArray[0]);
+    tuple->items[1] = mp_obj_new_bool(boolArray[1]);
+    tuple->items[2] = mp_obj_new_bool(boolArray[2]);
+
+    // Return the Python tuple
+    return MP_OBJ_FROM_PTR(tuple);
+      
+}
+
+
+extern mp_obj_t MeloperoSensei_enable_pedometer(mp_obj_t self_in, mp_obj_t enable){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    bool c_enable = mp_obj_is_true(enable);
+
+    self->sensei->imuEnablePedometer(c_enable);
+
+    return mp_const_none;
+
+}
+
+extern mp_obj_t MeloperoSensei_reset_steps(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    self->sensei->imuResetStepCounter();
+
+    return mp_const_none;
+
+}
+
+extern mp_obj_t MeloperoSensei_get_steps(mp_obj_t self_in){
+
+    _MeloperoSensei_obj_t *self = (_MeloperoSensei_obj_t*) MP_OBJ_TO_PTR(self_in);
+
+    uint16_t steps = self->sensei->imuGetSteps();
+    
+    if (steps % 2 == 1) {
+        
+        steps =  (steps + 1) / 2;
+    } else {
+        // If the number is even, just divide
+        steps = steps / 2;
+    }
+
+    return mp_obj_new_int(steps);
+
+}
+
+
 
 
 extern mp_obj_t MeloperoSensei_get_cpu_temp(mp_obj_t self_in){
