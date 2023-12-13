@@ -71,9 +71,9 @@ public:
 
     void setLightMax();
 
-    uint8_t getLightLevel();
+    float getLightLevel();
 
-    uint8_t getBatteryLevel();
+    float getBatteryLevel();
 
     float getTemperature();
 
@@ -101,6 +101,7 @@ public:
     bool imuGetFreeFallDetected();
     bool imuGetSingleTapDetected();
     bool imuGetDoubleTapDetected();
+    bool* imuGetEvents();
 
     float* imuGetAccelerationMg();
     float* imuGetAngularRateMdps();
