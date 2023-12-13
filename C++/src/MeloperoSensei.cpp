@@ -136,12 +136,12 @@ void MeloperoSensei::setLightMax()
     analog_set_light_max();
 }
 
-uint8_t MeloperoSensei::getLightLevel()
+float MeloperoSensei::getLightLevel()
 {
-    return analog_read_light();
+    return analog_read_light_raw();
 }
     
-uint8_t MeloperoSensei::getBatteryLevel()
+float MeloperoSensei::getBatteryLevel()
 {
     return analog_read_battery();
 }
@@ -245,6 +245,16 @@ bool MeloperoSensei::imuGetDoubleTapDetected()
     imu.updateInterruptSources();
     return imu.doubleTapDetected;
 }
+
+bool* MeloperoSensei::imuGetEvents()
+{
+    imu.updateInterruptSources();
+
+    static bool events[] = { imu.freeFallDetected, imu.singleTapDetected, imu.doubleTapDetected };
+    return events;
+
+}
+
 
 float* MeloperoSensei::imuGetAccelerationMg()
 {

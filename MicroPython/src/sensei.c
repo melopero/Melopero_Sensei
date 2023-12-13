@@ -40,6 +40,18 @@ MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_set_light_min_obj, MeloperoSensei_set_l
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_set_light_max_obj, MeloperoSensei_set_light_max);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_touch_init_obj, MeloperoSensei_touch_init);
 MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_touch_obj, MeloperoSensei_get_touch);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_imu_init_obj, MeloperoSensei_imu_init);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_imu_event_obj, MeloperoSensei_get_imu_event);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_acceleration_obj, MeloperoSensei_get_acceleration);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_rotation_obj, MeloperoSensei_get_rotation);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_freefall_obj, MeloperoSensei_get_freefall);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_single_tap_obj, MeloperoSensei_get_single_tap);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_double_tap_obj, MeloperoSensei_get_double_tap);
+MP_DEFINE_CONST_FUN_OBJ_2(MeloperoSensei_enable_pedometer_obj, MeloperoSensei_enable_pedometer);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_reset_steps_obj, MeloperoSensei_reset_steps);
+MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_steps_obj, MeloperoSensei_get_steps);
+
+
 
 //Bindings of methods
 
@@ -69,8 +81,20 @@ STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_set_light_max), MP_ROM_PTR(&MeloperoSensei_set_light_max_obj) },
     { MP_ROM_QSTR(MP_QSTR_touch_init), MP_ROM_PTR(&MeloperoSensei_touch_init_obj) },
     { MP_ROM_QSTR(MP_QSTR_get_touch), MP_ROM_PTR(&MeloperoSensei_get_touch_obj) },
-
+    { MP_ROM_QSTR(MP_QSTR_imu_init), MP_ROM_PTR(&MeloperoSensei_imu_init_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_imu_event), MP_ROM_PTR(&MeloperoSensei_get_imu_event_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_acceleration), MP_ROM_PTR(&MeloperoSensei_get_acceleration_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_rotation), MP_ROM_PTR(&MeloperoSensei_get_rotation_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_freefall), MP_ROM_PTR(&MeloperoSensei_get_freefall_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_single_tap), MP_ROM_PTR(&MeloperoSensei_get_single_tap_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_double_tap), MP_ROM_PTR(&MeloperoSensei_get_double_tap_obj) },
+    { MP_ROM_QSTR(MP_QSTR_enable_pedometer), MP_ROM_PTR(&MeloperoSensei_enable_pedometer_obj) },
+    { MP_ROM_QSTR(MP_QSTR_reset_steps), MP_ROM_PTR(&MeloperoSensei_reset_steps_obj) },
+    { MP_ROM_QSTR(MP_QSTR_get_steps), MP_ROM_PTR(&MeloperoSensei_get_steps_obj) },
+    
+    
 };
+
 STATIC MP_DEFINE_CONST_DICT(MeloperoSensei_locals_dict, MeloperoSensei_locals_dict_table);
 
 /***** Class Definition *****/

@@ -8,7 +8,6 @@ pin = Pin(5,Pin.IN,Pin.PULL_UP)
 def callback(pin):
     global interrupt_flag
     interrupt_flag=1
-    sensei.write_text("interrupt", 20,150)
 
 pin.irq(trigger=Pin.IRQ_FALLING, handler=callback)
 
@@ -24,7 +23,12 @@ while True:
     if(interrupt_flag is 1):
         sensei.play_note(600, 300, 1, False, 100)
         touch=sensei.get_touch()
-        sensei.write_text(bin(touch), 20, 50)
+        
+        for i in range(12):
+            if touch[i]:
+                text = str(i+1)
+                sensei.write_text(text, 100, 100)
+                
         sensei.update_display()
         interrupt_flag=0
         sleep(0.2)

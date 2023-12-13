@@ -22,23 +22,33 @@ void analog_init()
 
 /**** battery level sensor ****/
 
-#define BATTERY_FULL     1.4
-#define BATTERY_EMPTY    0.9
+#define BATTERY_FULL     4.2
+#define BATTERY_EMPTY    2.8
 
-uint8_t analog_read_battery()
+float analog_read_battery()
 {
     adc_select_input(BATTERY_PIN - ADC_GPIO_BASE);
-    
     uint16_t battery_raw = adc_read();
-    float battery_v = (float)battery_raw / ADC_SAMPLE_LEVELS * ADC_VREF;
+    float battery_v = ((float)battery_raw) * 3 * 3.3 / ADC_SAMPLE_LEVELS;
     
-    float battery_level = (battery_v - BATTERY_EMPTY) / (BATTERY_FULL - BATTERY_EMPTY);
+    if(battery_v > 4.2) battery_v = 4.2;
+    
+    return battery_v;
+    
+}
+
+float percentage_read_battery(float voltage)
+{
+    float battery_level = (voltage - BATTERY_EMPTY) / (BATTERY_FULL - BATTERY_EMPTY);
     battery_level *= 100;  
     if (battery_level > 100)
         battery_level = 100;
 
     return battery_level;
+
 }
+
+
 
 /**** light level sensor ****/
 

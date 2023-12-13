@@ -71,6 +71,18 @@ extern mp_obj_t MeloperoSensei_set_light_min(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_set_light_max(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_touch_init(mp_obj_t self_in);
 extern mp_obj_t MeloperoSensei_get_touch(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_imu_init(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_imu_event(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_acceleration(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_rotation(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_freefall(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_single_tap(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_get_double_tap(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_enable_pedometer(mp_obj_t self_in, mp_obj_t enable);
+extern mp_obj_t MeloperoSensei_get_steps(mp_obj_t self_in);
+extern mp_obj_t MeloperoSensei_reset_steps(mp_obj_t self_in);
+
+
 
 
 

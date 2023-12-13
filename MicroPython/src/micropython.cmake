@@ -18,6 +18,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/SPI.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/analog.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/MPR121.c
 ${CMAKE_CURRENT_LIST_DIR}/../../C++/src/LSM6DSL.cpp
+${CMAKE_CURRENT_LIST_DIR}/../../C++/src/lsm6dsl-pid/lsm6dsl_reg.c
 )
 
 set(MICROPY_C_HEAP_SIZE 10240)
