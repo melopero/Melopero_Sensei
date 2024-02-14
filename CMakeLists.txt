@@ -24,6 +24,7 @@ add_subdirectory(C++/examples/pedometer)
 add_subdirectory(C++/examples/tap_detection)
 add_subdirectory(C++/examples/touch)
 add_subdirectory(C++/examples/demo)
+add_subdirectory(C++/examples/microphone)
 
 add_compile_options(-Wall
         -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
