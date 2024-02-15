@@ -274,9 +274,19 @@ void MeloperoSensei::microphoneInit()
     microphone_init();
 }
 
+void MeloperoSensei::microphoneUSBInit()
+{
+    microphone_USB_init();
+}
+
 void MeloperoSensei::microphoneDeinit()
 {
     microphone_deinit();
+}
+
+void MeloperoSensei::microphoneUSBDeinit()
+{
+    microphone_USB_deinit();
 }
 
 void MeloperoSensei::microphoneEnable(bool enable)
@@ -295,6 +305,11 @@ int MeloperoSensei::microphoneGetNumSamples()
 int16_t MeloperoSensei::microphoneGetSample(int index)
 {
     return microphone_get_sample(index);
+}
+
+void MeloperoSensei::microphoneRunUSB()
+{
+    microphone_USB_task();
 }
 
 /**** game loop ****/

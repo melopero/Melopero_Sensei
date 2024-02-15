@@ -110,10 +110,13 @@ public:
     /**** microphone interface ****/
 
     void microphoneInit();
+    void microphoneUSBInit();
     void microphoneDeinit();
+    void microphoneUSBDeinit();
     void microphoneEnable(bool enable);
     int microphoneGetNumSamples();
     int16_t microphoneGetSample(int index);
+    void microphoneRunUSB();
 
     /**** game loop ****/
 
