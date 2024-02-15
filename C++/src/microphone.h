@@ -8,9 +8,12 @@ extern volatile int samples_read;
 extern int16_t sample_buffer[];
 
 void microphone_init(void);
+void microphone_USB_init(void);
 void microphone_deinit(void);
+void microphone_USB_deinit(void);
 void microphone_enable(bool enable);
 int microphone_get_samples_read(void);
 int16_t microphone_get_sample(int index);
+void microphone_USB_task(void);
 
 #endif  // MICROPHONE_H
