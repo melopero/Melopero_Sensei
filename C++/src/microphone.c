@@ -2,6 +2,8 @@
 #include "mic-lib-for-pico/include/pico/pdm_microphone.h"
 #include <stdint.h>
 
+#define SAMPLE_BUFFER_SIZE 256
+
 const struct pdm_microphone_config config = {
     // GPIO pin for the PDM DAT signal
     .gpio_data = 2,
@@ -19,15 +21,15 @@ const struct pdm_microphone_config config = {
     .sample_rate = 8000,
 
     // number of samples to buffer
-    .sample_buffer_size = 256,
+    .sample_buffer_size = SAMPLE_BUFFER_SIZE,
 };
 
-int16_t sample_buffer[256];
+int16_t sample_buffer[SAMPLE_BUFFER_SIZE];
 volatile int samples_read = 0;
 
-void on_pdm_samples_ready()
+void on_pdm_samples_ready(void)
 {
-    samples_read = pdm_microphone_read(sample_buffer, 256);
+    samples_read = pdm_microphone_read(sample_buffer, SAMPLE_BUFFER_SIZE);
 }
 
 void microphone_init(void)
@@ -53,4 +55,14 @@ void microphone_enable(bool enable)
         pdm_microphone_start();
     else // !enable
         pdm_microphone_stop();
+}
+
+int microphone_get_samples_read(void)
+{
+    return samples_read;
+}
+
+int16_t microphone_get_sample(int index)
+{
+    return sample_buffer[index];
 }
