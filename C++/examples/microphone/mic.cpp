@@ -10,20 +10,19 @@ int main(int argc, char *argv[])
 {
     MeloperoSensei sensei;
 
-    microphone_init();
-    microphone_enable(true);
+    sensei.microphoneInit();
+    sensei.microphoneEnable(true);
     
     while (true)
     {
-        while (samples_read == 0)
-            ;
+        int numSamples;
 
-        int numSamples = samples_read;
-        samples_read = 0;
+        while ((numSamples = sensei.microphoneGetNumSamples()) == 0)
+            ;
 
         int16_t avg = 0;
         for (int i = 0; i < numSamples; i++)
-            avg += sample_buffer[i];
+            avg += sensei.microphoneGetSample(i);
 
         avg /= numSamples;
 

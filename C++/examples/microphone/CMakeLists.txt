@@ -17,7 +17,9 @@ add_executable(microphone
         ../../src/microphone.c
         ../../src/mic-lib-for-pico/pdm_microphone.c
         ../../src/mic-lib-for-pico/OpenPDM2PCM/OpenPDMFilter.c
-)
+        ../../src/mic-lib-for-pico/usb_microphone.c
+        ../../src/mic-lib-for-pico/usb_descriptors.c
+        )
 
 pico_generate_pio_header(microphone ${CMAKE_CURRENT_LIST_DIR}/../../src/mic-lib-for-pico/pdm_microphone.pio)
 
@@ -32,7 +34,11 @@ target_link_libraries(microphone
         hardware_dma
         hardware_clocks
         pico_rand
+        tinyusb_device 
+        tinyusb_board 
 )
+
+target_include_directories(microphone PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../../src/mic-lib-for-pico)
 
  # create map/bin/hex file etc.
 pico_add_extra_outputs(microphone)
