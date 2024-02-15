@@ -14,6 +14,7 @@ extern "C"
 #include "analog.h"
 #include "MPR121.h"
 #include "LSM6DSL.hpp"
+#include "microphone.h"
 }
 
 class MeloperoSensei
@@ -105,6 +106,14 @@ public:
 
     float* imuGetAccelerationMg();
     float* imuGetAngularRateMdps();
+
+    /**** microphone interface ****/
+
+    void microphoneInit();
+    void microphoneDeinit();
+    void microphoneEnable(bool enable);
+    int microphoneGetNumSamples();
+    int16_t microphoneGetSample(int index);
 
     /**** game loop ****/
 

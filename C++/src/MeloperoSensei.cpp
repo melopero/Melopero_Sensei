@@ -267,6 +267,35 @@ float* MeloperoSensei::imuGetAngularRateMdps()
     return imu.angular_rate_mdps;
 }
 
+/**** microphone interface ****/
+
+void MeloperoSensei::microphoneInit()
+{
+    microphone_init();
+}
+
+void MeloperoSensei::microphoneDeinit()
+{
+    microphone_deinit();
+}
+
+void MeloperoSensei::microphoneEnable(bool enable)
+{
+    microphone_enable(enable);
+}
+
+int MeloperoSensei::microphoneGetNumSamples()
+{
+    int num_samples = microphone_get_samples_read();
+    samples_read = 0;
+
+    return num_samples;
+}
+
+int16_t MeloperoSensei::microphoneGetSample(int index)
+{
+    return microphone_get_sample(index);
+}
 
 /**** game loop ****/
 
