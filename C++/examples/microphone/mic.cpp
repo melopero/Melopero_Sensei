@@ -12,23 +12,26 @@ int main(int argc, char *argv[])
 
     sensei.microphoneInit();
     sensei.microphoneEnable(true);
+    sensei.microphoneUSBInit();
     
     while (true)
     {
-        int numSamples;
+        // int numSamples;
 
-        while ((numSamples = sensei.microphoneGetNumSamples()) == 0)
-            ;
+        // while ((numSamples = sensei.microphoneGetNumSamples()) == 0)
+        //     ;
 
-        int16_t avg = 0;
-        for (int i = 0; i < numSamples; i++)
-            avg += sensei.microphoneGetSample(i);
+        // int16_t avg = 0;
+        // for (int i = 0; i < numSamples; i++)
+        //     avg += sensei.microphoneGetSample(i);
 
-        avg /= numSamples;
+        // avg /= numSamples;
 
-        sensei.clearScreen(0x00, 0x00, 0x00);
-        sensei.print(10, 30 , std::to_string(avg));
-        sensei.presentScreen();   
+        // sensei.clearScreen(0x00, 0x00, 0x00);
+        // sensei.print(10, 30 , std::to_string(avg));
+        // sensei.presentScreen(); 
+
+        sensei.microphoneRunUSB();  
     }
 
     return 0;
