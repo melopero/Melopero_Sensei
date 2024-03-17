@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
     ../../src/SPI.c
     ../../src/ST7789.c
     ../../src/MPR121.c
+    ../../src/LSM6DSL.cpp
     touch_example.cpp
 )
 
