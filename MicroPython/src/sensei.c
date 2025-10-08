@@ -55,7 +55,7 @@ MP_DEFINE_CONST_FUN_OBJ_1(MeloperoSensei_get_steps_obj, MeloperoSensei_get_steps
 
 //Bindings of methods
 
-STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
+static const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_write_text), MP_ROM_PTR(&MeloperoSensei_write_text_obj) },
     { MP_ROM_QSTR(MP_QSTR___del__), MP_ROM_PTR(&MeloperoSensei___del___obj) },
     { MP_ROM_QSTR(MP_QSTR_update_display), MP_ROM_PTR(&MeloperoSensei_update_display_obj) },
@@ -95,7 +95,7 @@ STATIC const mp_rom_map_elem_t MeloperoSensei_locals_dict_table[] = {
     
 };
 
-STATIC MP_DEFINE_CONST_DICT(MeloperoSensei_locals_dict, MeloperoSensei_locals_dict_table);
+static MP_DEFINE_CONST_DICT(MeloperoSensei_locals_dict, MeloperoSensei_locals_dict_table);
 
 /***** Class Definition *****/
 #ifdef MP_DEFINE_CONST_OBJ_TYPE
@@ -120,7 +120,7 @@ const mp_obj_type_t MeloperoSensei_type = {
 #endif
 
 /***** Globals Table *****/
-STATIC const mp_map_elem_t melopero_sensei_globals_table[] = {
+static const mp_map_elem_t melopero_sensei_globals_table[] = {
     { MP_OBJ_NEW_QSTR(MP_QSTR___name__), MP_OBJ_NEW_QSTR(MP_QSTR_melopero_sensei) },
     { MP_OBJ_NEW_QSTR(MP_QSTR_MeloperoSensei), (mp_obj_t)&MeloperoSensei_type },
 
@@ -145,7 +145,7 @@ STATIC const mp_map_elem_t melopero_sensei_globals_table[] = {
    
 
 };
-STATIC MP_DEFINE_CONST_DICT(mp_module_melopero_sensei_globals, melopero_sensei_globals_table);
+static MP_DEFINE_CONST_DICT(mp_module_melopero_sensei_globals, melopero_sensei_globals_table);
 
 /***** Module Definition *****/
 const mp_obj_module_t melopero_sensei_user_cmodule = {
